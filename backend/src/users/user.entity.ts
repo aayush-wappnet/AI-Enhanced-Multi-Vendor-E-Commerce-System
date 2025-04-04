@@ -3,6 +3,7 @@ import { Order } from '../orders/entities/order.entity';
 import { Vendor } from '../vendors/vendor.entity';
 import { Cart } from '../cart/entities/cart.entity';
 import { Wishlist } from '../wishlist/wishlist.entity';
+import { Payment } from '../orders/entities/payment.entity';
 
 @Entity()
 export class User {
@@ -35,6 +36,9 @@ export class User {
 
   @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
   wishlist: Wishlist[];
+
+  @OneToMany(() => Payment, (payment) => payment.user)
+  payments: Payment[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

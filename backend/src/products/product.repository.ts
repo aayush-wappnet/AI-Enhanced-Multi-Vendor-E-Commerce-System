@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Category } from './entities/category.entity';
@@ -22,6 +22,13 @@ export class ProductRepository {
     return this.productRepository.find({ relations: ['vendor', 'category', 'subcategory'] });
   }
 
+  async findAllPublic(): Promise<Product[]> {
+    return this.productRepository.find({
+      where: { status: 'approved' },
+      relations: ['vendor', 'category', 'subcategory'],
+    });
+  }
+
   async findById(id: number): Promise<Product | null> {
     return this.productRepository.findOne({ where: { id }, relations: ['vendor', 'category', 'subcategory'] });
   }
@@ -34,22 +41,54 @@ export class ProductRepository {
     return this.subcategoryRepository.findOne({ where: { id } });
   }
 
-  async create(createProductDto: CreateProductDto, vendor: any, category: any, subcategory: any, imageUrls: string[]): Promise<Product> {
-    const product = this.productRepository.create({
-      ...createProductDto,
-      vendor,
-      category,
-      subcategory,
-      imageUrls,
-    });
+  async findApprovedByCategoryAndSubcategory(categoryId: number, subcategoryId?: number): Promise<Product[]> {
+    const query: any = {
+      where: { status: 'approved', category: { id: categoryId } },
+      relations: ['vendor', 'category', 'subcategory'],
+    };
+    if (subcategoryId) {
+      query.where.subcategory = { id: subcategoryId };
+    }
+    return this.productRepository.find(query);
+  }
+
+  async create(
+    productData: {
+      name: string;
+      description: string;
+      price: number;
+      stock: number;
+      type: string;
+      vendor: any;
+      category: any;
+      subcategory: any;
+      imageUrls: string[];
+      status: 'pending' | 'approved' | 'rejected';
+    },
+  ): Promise<Product> {
+    const product = this.productRepository.create(productData);
     return this.productRepository.save(product);
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto, subcategory?: any, imageUrls?: string[]): Promise<Product | null> {
+  async update(
+    id: number,
+    updateProductDto: UpdateProductDto,
+    subcategory?: any,
+    imageUrls?: string[],
+  ): Promise<Product | null> {
     const updateData: any = { ...updateProductDto };
     if (subcategory) updateData.subcategory = subcategory;
-    if (imageUrls) updateData.imageUrls = imageUrls;
+    if (imageUrls && imageUrls.length > 0) {
+      const product = await this.findById(id);
+      if (!product) throw new NotFoundException('Product not found');
+      updateData.imageUrls = [...(product.imageUrls || []), ...imageUrls];
+    }
     await this.productRepository.update(id, updateData);
+    return this.findById(id);
+  }
+
+  async updateStatus(id: number, status: 'approved' | 'rejected'): Promise<Product | null> {
+    await this.productRepository.update(id, { status });
     return this.findById(id);
   }
 

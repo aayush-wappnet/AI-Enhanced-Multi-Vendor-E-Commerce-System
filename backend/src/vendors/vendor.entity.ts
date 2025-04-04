@@ -14,6 +14,27 @@ export class Vendor {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ type: 'enum', enum: ['pending', 'approved', 'rejected'], default: 'pending' })
+  status: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  businessEmail: string;
+
+  @Column({ nullable: true })
+  businessContact: string;
+
+  @Column({ nullable: true })
+  logoUrl: string;
+
+  @Column({ nullable: true })
+  website: string;
+
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
+
   @ManyToOne(() => User, (user) => user.vendors)
   user: User;
 

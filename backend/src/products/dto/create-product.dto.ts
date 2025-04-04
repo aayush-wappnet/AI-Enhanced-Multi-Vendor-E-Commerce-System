@@ -1,28 +1,30 @@
-import { IsNotEmpty, IsNumber, IsEnum, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsEnum, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
+  @IsString()
   name: string;
 
   @IsNotEmpty()
+  @IsString()
   description: string;
 
-  @IsNumber()
-  price: number;
+  @IsString() // Changed from @IsNumber() to accept string from form-data
+  price: string;
 
-  @IsNumber()
-  stock: number;
+  @IsString() // Changed from @IsNumber()
+  stock: string;
 
   @IsEnum(['physical', 'digital', 'subscription'])
   type: string;
 
-  @IsNumber()
-  vendorId: number;
+  @IsString() // Changed from @IsNumber()
+  vendorId: string;
 
-  @IsNumber()
-  categoryId: number;
+  @IsString() // Changed from @IsNumber()
+  categoryId: string;
 
-  @IsNumber()
+  @IsString() // Changed from @IsNumber()
   @IsOptional()
-  subcategoryId?: number;
+  subcategoryId?: string;
 }

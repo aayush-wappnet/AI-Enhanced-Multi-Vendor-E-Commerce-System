@@ -27,6 +27,9 @@ export class Product {
   @Column('json', { nullable: true }) // Array of Cloudinary URLs
   imageUrls: string[];
 
+  @Column({ type: 'enum', enum: ['pending', 'approved', 'rejected'], default: 'pending' })
+  status: string;
+
   @ManyToOne(() => Vendor, (vendor) => vendor.products)
   vendor: Vendor;
 

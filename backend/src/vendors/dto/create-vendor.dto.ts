@@ -1,15 +1,37 @@
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsEmail, IsPhoneNumber } from 'class-validator';
 
 export class CreateVendorDto {
   @IsNotEmpty()
-  name: string; // Store name
+  @IsString()
+  name: string;
 
   @IsOptional()
-  description?: string; // Store description
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsEmail()
+  businessEmail?: string;
+
+  @IsOptional()
+  @IsPhoneNumber() // Validates phone number format (e.g., +12345678901)
+  businessContact?: string;
+
+  @IsOptional()
+  @IsString()
+  logoUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  website?: string;
 
   @IsNumber()
-  userId: number; // The user creating the vendor store
+  userId: number;
 
   @IsNumber()
-  categoryId: number; // The category this vendor store specializes in
+  categoryId: number;
 }

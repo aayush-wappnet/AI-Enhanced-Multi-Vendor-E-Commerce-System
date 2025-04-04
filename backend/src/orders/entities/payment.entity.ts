@@ -1,16 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Order } from '../orders/entities/order.entity';
-import { User } from '../users/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Order } from './order.entity'; // Adjust the import path as necessary
+import { User } from '../../users/user.entity'; // Adjust the import path as necessary
 
 @Entity()
 export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Order, (order) => order.id)
+  @OneToOne(() => Order, (order) => order.payment)
   order: Order;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.payments)
   user: User;
 
   @Column()

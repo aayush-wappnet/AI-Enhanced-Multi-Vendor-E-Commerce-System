@@ -31,8 +31,15 @@ export class VendorRepository {
     const vendor = this.vendorRepository.create({
       name: createVendorDto.name,
       description: createVendorDto.description,
+      address: createVendorDto.address,
+      businessEmail: createVendorDto.businessEmail,
+      businessContact: createVendorDto.businessContact,
+      logoUrl: createVendorDto.logoUrl,
+      website: createVendorDto.website,
+      status: 'pending', // Default status
       user,
       category,
+      isActive: true, // Default to active
     });
     return this.vendorRepository.save(vendor);
   }
@@ -43,6 +50,11 @@ export class VendorRepository {
       updateData.category = category;
     }
     await this.vendorRepository.update(id, updateData);
+    return this.findById(id);
+  }
+
+  async updateStatus(id: number, status: 'approved' | 'rejected'): Promise<Vendor | null> {
+    await this.vendorRepository.update(id, { status });
     return this.findById(id);
   }
 

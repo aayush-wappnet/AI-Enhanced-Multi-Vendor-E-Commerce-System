@@ -43,6 +43,18 @@ export class VendorsService {
     return this.vendorRepository.update(id, updateVendorDto, category);
   }
 
+  async approve(id: number): Promise<Vendor | null> {
+    const vendor = await this.findById(id);
+    if (!vendor) throw new NotFoundException('Vendor not found');
+    return this.vendorRepository.updateStatus(id, 'approved');
+  }
+
+  async reject(id: number): Promise<Vendor | null> {
+    const vendor = await this.findById(id);
+    if (!vendor) throw new NotFoundException('Vendor not found');
+    return this.vendorRepository.updateStatus(id, 'rejected');
+  }
+
   async delete(id: number): Promise<void> {
     return this.vendorRepository.delete(id);
   }

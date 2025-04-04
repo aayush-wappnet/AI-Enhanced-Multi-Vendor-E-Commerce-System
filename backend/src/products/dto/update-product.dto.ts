@@ -21,5 +21,10 @@ export class UpdateProductDto {
 
   @IsNumber()
   @IsOptional()
+  categoryId?: number;
+
+
+  @IsNumber()
+  @IsOptional()
   subcategoryId?: number;
 }

@@ -1,28 +1,26 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ProductRepository } from './product.repository';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { VendorsService } from '../vendors/vendors.service';
 import { v2 as cloudinary } from 'cloudinary';
-import { ConfigService } from '@nestjs/config';
 import { Product } from './entities/product.entity';
+import { unlink } from 'fs/promises';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private productRepository: ProductRepository,
     private vendorsService: VendorsService,
-    private configService: ConfigService,
-  ) {
-    cloudinary.config({
-      cloud_name: this.configService.get('CLOUDINARY_CLOUD_NAME'),
-      api_key: this.configService.get('CLOUDINARY_API_KEY'),
-      api_secret: this.configService.get('CLOUDINARY_API_SECRET'),
-    });
-  }
+  ) {}
 
   async findAll(): Promise<Product[]> {
     return this.productRepository.findAll();
+  }
+
+  async findAllPublic(): Promise<Product[]> {
+    // Only return approved products for public access
+    return this.productRepository.findAllPublic();
   }
 
   async findById(id: number): Promise<Product | null> {
@@ -37,22 +35,34 @@ export class ProductsService {
     return this.productRepository.findSubcategoryById(id);
   }
 
+  async findApprovedByCategoryAndSubcategory(categoryId: number, subcategoryId?: number): Promise<Product[]> {
+    return this.productRepository.findApprovedByCategoryAndSubcategory(categoryId, subcategoryId);
+  }
+
   async uploadImages(files: Express.Multer.File[]): Promise<string[]> {
-    const uploadPromises = files.map((file) =>
-      cloudinary.uploader.upload(file.path, { folder: 'products' }).then((result) => result.secure_url),
-    );
+    const uploadPromises = files.map(async (file) => {
+      try {
+        const result = await cloudinary.uploader.upload(file.path, { folder: 'products' });
+        await unlink(file.path).catch((err) => console.error('Failed to delete temp file:', err));
+        return result.secure_url;
+      } catch (error) {
+        console.error('Cloudinary Upload Error:', error);
+        throw new BadRequestException(`Failed to upload image: ${error.message}`);
+      }
+    });
     return Promise.all(uploadPromises);
   }
 
   async create(createProductDto: CreateProductDto, files: Express.Multer.File[]): Promise<Product> {
-    const vendor = await this.vendorsService.findById(createProductDto.vendorId);
+    const vendor = await this.vendorsService.findById(parseInt(createProductDto.vendorId, 10));
     if (!vendor) throw new NotFoundException('Vendor not found');
+    if (vendor.status !== 'approved') throw new NotFoundException('Vendor must be approved to create products');
 
-    const category = await this.findCategoryById(createProductDto.categoryId);
+    const category = await this.findCategoryById(parseInt(createProductDto.categoryId, 10));
     if (!category) throw new NotFoundException('Category not found');
 
     const subcategory = createProductDto.subcategoryId
-      ? await this.findSubcategoryById(createProductDto.subcategoryId)
+      ? await this.findSubcategoryById(parseInt(createProductDto.subcategoryId, 10))
       : null;
     if (createProductDto.subcategoryId && !subcategory) throw new NotFoundException('Subcategory not found');
 
@@ -61,7 +71,25 @@ export class ProductsService {
     }
 
     const imageUrls = await this.uploadImages(files);
-    return this.productRepository.create(createProductDto, vendor, category, subcategory, imageUrls);
+
+    const productData = {
+      name: createProductDto.name,
+      description: createProductDto.description,
+      price: parseFloat(createProductDto.price),
+      stock: parseInt(createProductDto.stock, 10),
+      type: createProductDto.type,
+      vendor,
+      category,
+      subcategory,
+      imageUrls,
+      status: 'pending' as const,
+    };
+
+    if (isNaN(productData.price) || isNaN(productData.stock)) {
+      throw new BadRequestException('Price and stock must be valid numbers');
+    }
+
+    return this.productRepository.create(productData);
   }
 
   async update(id: number, updateProductDto: UpdateProductDto, files?: Express.Multer.File[]): Promise<Product | null> {
@@ -77,6 +105,18 @@ export class ProductsService {
     }
 
     return this.productRepository.update(id, updateProductDto, subcategory, imageUrls);
+  }
+
+  async approve(id: number): Promise<Product | null> {
+    const product = await this.findById(id);
+    if (!product) throw new NotFoundException('Product not found');
+    return this.productRepository.updateStatus(id, 'approved');
+  }
+
+  async reject(id: number): Promise<Product | null> {
+    const product = await this.findById(id);
+    if (!product) throw new NotFoundException('Product not found');
+    return this.productRepository.updateStatus(id, 'rejected');
   }
 
   async delete(id: number): Promise<void> {

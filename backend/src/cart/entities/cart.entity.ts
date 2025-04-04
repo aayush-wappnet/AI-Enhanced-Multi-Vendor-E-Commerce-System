@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, OneToOne, OneToMany,Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, OneToMany, OneToOne, Column, JoinColumn } from 'typeorm';
 import { User } from '../../users/user.entity';
 import { CartItem } from './cart-item.entity';
 
@@ -8,10 +8,11 @@ export class Cart {
   id: number;
 
   @OneToOne(() => User, (user) => user.cart)
+  @JoinColumn()
   user: User;
 
-  @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
-  cartItems: CartItem[];
+  @OneToMany(() => CartItem, (cartItem) => cartItem.cart, { cascade: true })
+  items: CartItem[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
