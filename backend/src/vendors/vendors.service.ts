@@ -1,3 +1,4 @@
+// vendor.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { VendorRepository } from './vendor.repository';
 import { CreateVendorDto } from './dto/create-vendor.dto';
@@ -18,6 +19,14 @@ export class VendorsService {
 
   async findById(id: number): Promise<Vendor | null> {
     return this.vendorRepository.findById(id);
+  }
+
+  async findByUserId(userId: number): Promise<Vendor[]> {
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return this.vendorRepository.findByUserId(userId);
   }
 
   async create(createVendorDto: CreateVendorDto): Promise<Vendor> {

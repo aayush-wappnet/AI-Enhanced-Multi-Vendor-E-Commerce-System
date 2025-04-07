@@ -1,0 +1,38 @@
+// src/app/features/customer/wishlist/wishlist.component.scss
+.wishlist-container {
+    padding: 20px;
+    background: linear-gradient(135deg, #eceff1, #cfd8dc); // Light gray gradient
+    min-height: calc(100vh - 120px);
+  }
+  
+  .title {
+    font-size: 2rem;
+    color: #455a64;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  
+    mat-icon {
+      margin-right: 10px;
+    }
+  }
+  
+  .wishlist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .wishlist-item {
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  
+    mat-card-title {
+      font-size: 1.2rem;
+      color: #455a64;
+    }
+  
+    mat-card-subtitle {
+      color: #666;
+    }
+  }

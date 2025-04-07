@@ -1,3 +1,4 @@
+// product.repository.ts
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -39,6 +40,10 @@ export class ProductRepository {
 
   async findSubcategoryById(id: number): Promise<Subcategory | null> {
     return this.subcategoryRepository.findOne({ where: { id } });
+  }
+
+  async findAllCategories(): Promise<Category[]> {
+    return this.categoryRepository.find({ relations: ['subcategories'] });
   }
 
   async findApprovedByCategoryAndSubcategory(categoryId: number, subcategoryId?: number): Promise<Product[]> {

@@ -1,0 +1,19 @@
+// src/app/admin/admin-products/admin-products.component.scss
+.products-container {
+    padding: 20px;
+  }
+  
+  h2 {
+    color: #1976d2;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .products-table {
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }

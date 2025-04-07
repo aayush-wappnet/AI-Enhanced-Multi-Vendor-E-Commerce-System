@@ -1,0 +1,39 @@
+<div class="product-detail-container">
+  <div class="product-detail-layout" *ngIf="product$ | async as product">
+    <div class="product-image-container">
+      <img [src]="product.imageUrls[0]" alt="{{ product.name }}" class="product-image">
+    </div>
+    <div class="product-detail-card">
+      <div class="product-info">
+        <h1 class="product-title">{{ product.name }}</h1>
+        <p class="product-price">{{ product.price | currency:'USD' }}</p>
+        <p class="product-description">{{ product.description }}</p>
+        <p class="product-stock">Stock: {{ product.stock }}</p>
+        <p class="product-category">Category: {{ product.category?.name }}</p>
+        <p class="product-vendor">Vendor: {{ product.vendor?.name }}</p>
+        <div class="product-actions">
+          <div class="cart-controls">
+            <!-- Show Add to Cart button if not yet added -->
+            <button *ngIf="!quantities[product.id]" mat-raised-button color="primary" (click)="addToCart(product.id, 0, $event)" class="add-to-cart-button">
+              <mat-icon>shopping_cart</mat-icon> Add to Cart
+            </button>
+            <!-- Show quantity controls if added to cart -->
+            <div *ngIf="quantities[product.id]" class="quantity-controls">
+              <button mat-icon-button color="accent" (click)="decrementQuantity(product.id, $event)" [disabled]="quantities[product.id] <= 1">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="quantity">{{ quantities[product.id] }}</span>
+              <button mat-icon-button color="accent" (click)="incrementQuantity(product.id, $event)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+          <!-- Wishlist button with minimal width -->
+          <button mat-icon-button color="accent" (click)="addToWishlist(product.id)" class="wishlist-button">
+            <mat-icon>favorite_border</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

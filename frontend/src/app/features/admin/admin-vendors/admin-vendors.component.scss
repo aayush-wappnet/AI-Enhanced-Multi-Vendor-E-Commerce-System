@@ -1,0 +1,39 @@
+// src/app/admin/admin-vendors/admin-vendors.component.scss
+.vendors-container {
+    padding: 20px;
+  }
+  
+  h2 {
+    color: #333; // Dark text color
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .vendors-table {
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+    th,
+    td {
+      color: #333; // Dark text for table content
+    }
+  }
+  
+  mat-icon-button {
+    &[color="primary"] {
+      background-color: #4caf50; // Green for approve
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+    &[color="warn"] {
+      background-color: #f44336; // Red for reject
+      &:hover {
+        background-color: #da190b;
+      }
+    }
+  }

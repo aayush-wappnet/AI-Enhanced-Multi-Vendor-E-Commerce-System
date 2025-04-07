@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+// vendor.controller.ts
+import { Controller, Get, Post, Put, Delete, Body, Param, UsePipes, ValidationPipe, UseGuards, Query } from '@nestjs/common';
 import { VendorsService } from './vendors.service';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UpdateVendorDto } from './dto/update-vendor.dto';
@@ -15,6 +16,12 @@ export class VendorsController {
   @Roles('admin', 'vendor')
   async findAll() {
     return this.vendorsService.findAll();
+  }
+
+  @Get('user/:userId')
+  @Roles('admin', 'vendor')
+  async findByUserId(@Param('userId') userId: number) {
+    return this.vendorsService.findByUserId(userId);
   }
 
   @Get(':id')

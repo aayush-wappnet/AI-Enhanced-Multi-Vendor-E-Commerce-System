@@ -18,7 +18,7 @@ export class CreateVendorDto {
   businessEmail?: string;
 
   @IsOptional()
-  @IsPhoneNumber() // Validates phone number format (e.g., +12345678901)
+  // @IsPhoneNumber() // Validates phone number format (e.g., +12345678901)
   businessContact?: string;
 
   @IsOptional()

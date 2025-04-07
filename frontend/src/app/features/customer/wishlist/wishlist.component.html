@@ -1,0 +1,18 @@
+<!-- src/app/features/customer/wishlist/wishlist.component.html -->
+<div class="wishlist-container">
+    <h1 class="title"><mat-icon>favorite</mat-icon> Your Wishlist</h1>
+    <div class="wishlist-items" *ngIf="wishlist$ | async as wishlist">
+      <mat-card class="wishlist-item" *ngFor="let item of wishlist.items">
+        <mat-card-header>
+          <mat-card-title>{{ item.name }}</mat-card-title>
+          <mat-card-subtitle>{{ item.price | currency:'USD' }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-raised-button color="warn" (click)="removeFromWishlist(item.id)">
+            <mat-icon>delete</mat-icon> Remove
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <p *ngIf="wishlist.items.length === 0">Your wishlist is empty.</p>
+    </div>
+  </div>

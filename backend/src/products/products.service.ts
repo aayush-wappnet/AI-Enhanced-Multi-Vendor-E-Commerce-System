@@ -1,3 +1,4 @@
+// products.service.ts
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ProductRepository } from './product.repository';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -5,6 +6,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { VendorsService } from '../vendors/vendors.service';
 import { v2 as cloudinary } from 'cloudinary';
 import { Product } from './entities/product.entity';
+import { Category } from './entities/category.entity';
 import { unlink } from 'fs/promises';
 
 @Injectable()
@@ -19,7 +21,6 @@ export class ProductsService {
   }
 
   async findAllPublic(): Promise<Product[]> {
-    // Only return approved products for public access
     return this.productRepository.findAllPublic();
   }
 
@@ -33,6 +34,10 @@ export class ProductsService {
 
   async findSubcategoryById(id: number): Promise<any> {
     return this.productRepository.findSubcategoryById(id);
+  }
+
+  async findAllCategories(): Promise<Category[]> {
+    return this.productRepository.findAllCategories();
   }
 
   async findApprovedByCategoryAndSubcategory(categoryId: number, subcategoryId?: number): Promise<Product[]> {

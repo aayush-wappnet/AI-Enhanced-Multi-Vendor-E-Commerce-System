@@ -1,0 +1,64 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px); // Adjust for header and footer height
+  background: linear-gradient(135deg, #fce4ec, #f8bbd0); // Light pink gradient
+}
+
+.register-card {
+  width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: rgb(62, 38, 38); // Changed to white for better contrast
+
+  mat-card-title {
+    text-align: center;
+    color: #d81b60;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .name-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+
+    .half-width {
+      width: calc(50% - 5px); // Adjust for gap
+    }
+  }
+
+  mat-form-field {
+    &.full-width {
+      width: 100%;
+    }
+
+    .mat-select-trigger {
+      color: #d81b60; // Match the theme
+    }
+
+    .mat-option {
+      color: #d81b60;
+      font-weight: 500;
+
+      &:hover {
+        background-color: rgba(216, 27, 96, 0.1); // Subtle hover effect
+      }
+    }
+  }
+
+  button {
+    color: black;
+    background-color: #d81b60; // Changed to a more vibrant pink
+    width: 100%;
+    margin-top: 10px;
+  }
+}

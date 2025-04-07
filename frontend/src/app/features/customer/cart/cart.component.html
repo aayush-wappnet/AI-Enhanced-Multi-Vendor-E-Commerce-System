@@ -1,0 +1,22 @@
+<!-- src/app/features/customer/cart/cart.component.html -->
+<div class="cart-container">
+    <h1 class="title"><mat-icon>shopping_cart</mat-icon> Your Cart</h1>
+    <div class="cart-items" *ngIf="cart$ | async as cart">
+      <mat-card class="cart-item" *ngFor="let item of cart.items">
+        <mat-card-header>
+          <mat-card-title>{{ item.name }}</mat-card-title>
+          <mat-card-subtitle>{{ item.price | currency:'USD' }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-raised-button color="warn" (click)="removeFromCart(item.id)">
+            <mat-icon>delete</mat-icon> Remove
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <div class="cart-total" *ngIf="cart.items.length > 0">
+        <h2>Total: {{ cart.total | currency:'USD' }}</h2>
+        <button mat-raised-button color="primary" (click)="checkout()">Checkout</button>
+      </div>
+      <p *ngIf="cart.items.length === 0">Your cart is empty.</p>
+    </div>
+  </div>

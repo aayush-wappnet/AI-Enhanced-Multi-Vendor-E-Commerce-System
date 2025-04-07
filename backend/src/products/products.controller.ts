@@ -1,3 +1,4 @@
+// products.controller.ts
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UsePipes, ValidationPipe, UseGuards, UseInterceptors, UploadedFiles, BadRequestException } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -9,14 +10,20 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Public } from '../common/decorators/public.decorator';
 
 @Controller('products')
-@UseGuards(JwtAuthGuard, RolesGuard) // Applies to all routes by default
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
   @Get()
-  @Public() // Makes this route public, bypassing JwtAuthGuard
+  @Public()
   async findAll() {
-    return this.productsService.findAllPublic(); // Use a new public method
+    return this.productsService.findAllPublic();
+  }
+
+  @Get('categories')
+  @Public()
+  async findAllCategories() {
+    return this.productsService.findAllCategories();
   }
 
   @Get(':id')
@@ -26,7 +33,6 @@ export class ProductsController {
   }
 
   @Get('category/:categoryId')
-  @Roles('customer')
   async findApprovedByCategoryAndSubcategory(
     @Param('categoryId') categoryId: number,
     @Query('subcategoryId') subcategoryId?: number,

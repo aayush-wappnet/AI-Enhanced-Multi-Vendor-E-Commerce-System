@@ -1,0 +1,31 @@
+<!-- src/app/admin/admin-dashboard/admin-dashboard.component.html -->
+<div class="dashboard-container">
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-icon>dashboard</mat-icon>
+        <mat-card-title>Admin Dashboard</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stats">
+          <mat-card class="stat-card">
+            <mat-card-header>
+              <mat-icon>group</mat-icon>
+              <mat-card-title>Vendors</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <h2>{{ vendorsCount$ | async }}</h2>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-card-header>
+              <mat-icon>inventory</mat-icon>
+              <mat-card-title>Products</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <h2>{{ productsCount$ | async }}</h2>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>

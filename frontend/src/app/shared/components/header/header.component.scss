@@ -1,0 +1,70 @@
+// src/app/shared/components/header/header.component.scss
+.header {
+  background-color: rgb(128, 113, 226);
+  color: black;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+button {
+  color: white; // Default text color for most buttons
+  margin: 0 10px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    transform: translateY(-2px); // Hover effect: slight lift
+  }
+
+  // Specific styling for Login and Register buttons
+  &[routerLink="/auth/login"],
+  &[routerLink="/auth/register"] {
+    color: black; // Black text color as requested
+    background-color: rgba(255, 255, 255, 0.2); // Light background for contrast
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px); // Hover effect
+    }
+  }
+
+  // Styling for customer navigation buttons
+  &.customer-nav {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.15);
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px); // Hover effect
+    }
+
+    mat-icon {
+      margin-right: 5px;
+    }
+  }
+}
+
+.profile-button {
+  margin-left: 20px;
+  padding: 0 15px;
+}

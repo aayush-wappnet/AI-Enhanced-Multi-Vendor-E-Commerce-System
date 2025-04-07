@@ -1,3 +1,4 @@
+// vendor.repository.ts
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,6 +24,13 @@ export class VendorRepository {
     return this.vendorRepository.findOne({ where: { id }, relations: ['user', 'category'] });
   }
 
+  async findByUserId(userId: number): Promise<Vendor[]> {
+    return this.vendorRepository.find({ 
+      where: { user: { id: userId } },
+      relations: ['user', 'category']
+    });
+  }
+
   async findCategoryById(id: number): Promise<Category | null> {
     return this.categoryRepository.findOne({ where: { id } });
   }
@@ -36,10 +44,10 @@ export class VendorRepository {
       businessContact: createVendorDto.businessContact,
       logoUrl: createVendorDto.logoUrl,
       website: createVendorDto.website,
-      status: 'pending', // Default status
+      status: 'pending',
       user,
       category,
-      isActive: true, // Default to active
+      isActive: true,
     });
     return this.vendorRepository.save(vendor);
   }

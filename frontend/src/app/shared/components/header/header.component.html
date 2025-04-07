@@ -1,0 +1,62 @@
+<!-- src/app/shared/components/header/header.component.html -->
+<mat-toolbar class="header">
+  <span class="brand">ShoppingMart</span>
+  <span class="spacer"></span>
+  <div *ngIf="!(user$ | async)" class="nav-links">
+    <button mat-button routerLink="/auth/login" color="default">
+      <mat-icon>login</mat-icon> Login
+    </button>
+    <button mat-button routerLink="/auth/register" color="default">
+      <mat-icon>person_add</mat-icon> Register
+    </button>
+  </div>
+  <div *ngIf="(user$ | async) as user" class="nav-links">
+    <!-- <button mat-button routerLink="/home">
+      <mat-icon>home</mat-icon> Home
+    </button> -->
+    <ng-container *ngIf="user.role === 'customer' || !user.role">
+      <button mat-button routerLink="/products" class="customer-nav">
+        <mat-icon>storefront</mat-icon> Products
+      </button>
+      <button mat-button routerLink="/cart" class="customer-nav">
+        <mat-icon>shopping_cart</mat-icon> {{ cartCount$ | async }}
+      </button>
+      <button mat-button routerLink="/wishlist" class="customer-nav">
+        <mat-icon>favorite</mat-icon> {{ wishlistCount$ | async }}
+      </button>
+    </ng-container>
+    <ng-container *ngIf="user.role === 'vendor'">
+      <button mat-button routerLink="/vendor/store" class="vendor-nav">
+        <mat-icon>store</mat-icon> Store
+      </button>
+      <button mat-button routerLink="/vendor/add-product" class="vendor-nav">
+        <mat-icon>add</mat-icon> Add Product
+      </button>
+      <button mat-button routerLink="/vendor/dashboard" class="vendor-nav">
+        <mat-icon>dashboard</mat-icon> Dashboard
+      </button>
+    </ng-container>
+    <ng-container *ngIf="user.role === 'admin'">
+      <button mat-button routerLink="/admin/dashboard" class="admin-nav">
+        <mat-icon>dashboard</mat-icon> Dashboard
+      </button>
+      <button mat-button routerLink="/admin/vendors" class="admin-nav">
+        <mat-icon>group</mat-icon> Vendors
+      </button>
+      <button mat-button routerLink="/admin/products" class="admin-nav">
+        <mat-icon>inventory</mat-icon> Products
+      </button>
+    </ng-container>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/profile/edit">
+        <mat-icon>edit</mat-icon> Edit Profile
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon> Logout
+      </button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="menu" class="profile-button">
+      <mat-icon>person</mat-icon> {{ user.name || 'Profile' }}
+    </button>
+  </div>
+</mat-toolbar>

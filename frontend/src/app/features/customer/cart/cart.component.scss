@@ -1,0 +1,55 @@
+// src/app/features/customer/cart/cart.component.scss
+.cart-container {
+    padding: 20px;
+    background: linear-gradient(135deg, #fffde7, #fff9c4); // Light yellow gradient
+    min-height: calc(100vh - 120px);
+  }
+  
+  .title {
+    font-size: 2rem;
+    color: #f9a825;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  
+    mat-icon {
+      margin-right: 10px;
+    }
+  }
+  
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .cart-item {
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  
+    mat-card-title {
+      font-size: 1.2rem;
+      color: #f9a825;
+    }
+  
+    mat-card-subtitle {
+      color: #666;
+    }
+  }
+  
+  .cart-total {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff3e0;
+    border-radius: 10px;
+    text-align: right;
+  
+    h2 {
+      margin: 0;
+      color: #f9a825;
+    }
+  
+    button {
+      margin-left: 10px;
+    }
+  }
