@@ -3,7 +3,7 @@ import { Order } from '../orders/entities/order.entity';
 import { Vendor } from '../vendors/vendor.entity';
 import { Cart } from '../cart/entities/cart.entity';
 import { Wishlist } from '../wishlist/wishlist.entity';
-import { Payment } from '../orders/entities/payment.entity';
+import { Payment } from '../payments/payment.entity';
 
 @Entity()
 export class User {

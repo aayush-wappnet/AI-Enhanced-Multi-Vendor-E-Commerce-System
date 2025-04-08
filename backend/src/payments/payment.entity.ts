@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne } from 'typeorm';
-import { Order } from './order.entity'; // Adjust the import path as necessary
-import { User } from '../../users/user.entity'; // Adjust the import path as necessary
+import { Order } from '../orders/entities/order.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Payment {
@@ -14,7 +14,7 @@ export class Payment {
   user: User;
 
   @Column()
-  transactionId: string; // Stripe/PayPal transaction ID
+  transactionId: string; // Stripe transaction ID (e.g., pi_...)
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
@@ -22,8 +22,8 @@ export class Payment {
   @Column({ type: 'enum', enum: ['pending', 'completed', 'failed'], default: 'pending' })
   status: string;
 
-  @Column()
-  paymentMethod: string; // e.g., 'stripe', 'paypal'
+  @Column({ default: 'stripe' }) // Default to 'stripe' since you're using Stripe only
+  paymentMethod: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

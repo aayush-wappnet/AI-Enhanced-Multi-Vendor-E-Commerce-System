@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,7 +37,11 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.errorMessage = null; // Clear previous error
       this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
-        next: () => this.router.navigate(['/products']), // Redirect to products page on successful login
+        next: () => {
+          // Trigger cart count update after login
+          this.apiService.getCart().subscribe(); // This will update cartCount$ in ApiService
+          this.router.navigate(['/products']); // Redirect to products page
+        },
         error: (err) => {
           console.error('Login failed:', err);
           this.errorMessage = err.message || 'Login failed due to an unknown error';

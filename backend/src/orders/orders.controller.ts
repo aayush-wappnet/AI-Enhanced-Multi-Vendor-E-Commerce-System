@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, UseGuards, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Param, UseGuards, BadRequestException } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
@@ -13,12 +13,8 @@ export class OrdersController {
 
   @Post('checkout')
   @Roles('customer')
-  async checkout(
-    @CurrentUser() user: User,
-    @Body('paymentMethodId') paymentMethodId: string,
-  ) {
-    if (!paymentMethodId) throw new BadRequestException('Payment method ID is required');
-    return this.ordersService.checkout(user.id, paymentMethodId);
+  async checkout(@CurrentUser() user: User) {
+    return this.ordersService.checkout(user.id);
   }
 
   @Get()

@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import { User } from '../../users/user.entity';
 import { OrderItem } from './order-item.entity';
-import { Payment } from './payment.entity'; // Adjust the import path as necessary
+import { Payment } from '../../payments/payment.entity'; // Adjust the import path as necessary
 
 @Entity()
 export class Order {

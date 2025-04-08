@@ -1,5 +1,5 @@
 // src/app/shared/components/header/header.component.ts
-import { Component, OnInit } from '@angular/core'; // Added OnInit for lifecycle hook
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
 import { AsyncPipe, NgIf } from '@angular/common';
@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from '../../../core/services/api.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs'; // Import BehaviorSubject
 
 @Component({
   selector: 'app-header',
@@ -30,8 +30,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   user$: Observable<any>;
-  cartCount$ = new BehaviorSubject<number>(0);
-  wishlistCount$ = new BehaviorSubject<number>(0);
+  cartCount$!: Observable<number>; // Use definite assignment assertion
+  wishlistCount$ = new BehaviorSubject<number>(0); // Initialize wishlist count
 
   constructor(
     private authService: AuthService,
@@ -44,16 +44,10 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateCounts();
-  }
-
-  updateCounts() {
-    // Fetch cart count
-    this.apiService.getCart().subscribe(cart => {
-      this.cartCount$.next(cart.items?.length || 0);
-    });
-    // Fetch wishlist count (assuming a separate endpoint like /wishlist)
-    this.apiService.getCart().subscribe(wishlist => { // Replace with correct endpoint if available
+    // Safely initialize cartCount$ after apiService is available
+    this.cartCount$ = this.apiService.cartCount$;
+    // Fetch wishlist count (replace with correct endpoint if available)
+    this.apiService.getCart().subscribe(wishlist => {
       this.wishlistCount$.next(wishlist.items?.length || 0);
     });
   }
@@ -65,14 +59,14 @@ export class HeaderComponent implements OnInit {
 
   addToCart(productId: string) {
     this.apiService.addToCart({ productId, quantity: 1 }).subscribe({
-      next: () => this.updateCounts(),
+      next: () => console.log('Added to cart from header', productId),
       error: (err) => console.error('Error adding to cart', err)
     });
   }
 
   addToWishlist(productId: string) {
     this.apiService.addToWishlist(productId).subscribe({
-      next: () => this.updateCounts(),
+      next: () => console.log('Added to wishlist', productId), // Removed updateCounts reference
       error: (err) => console.error('Error adding to wishlist', err)
     });
   }

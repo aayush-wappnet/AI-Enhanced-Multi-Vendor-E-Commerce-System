@@ -1,4 +1,3 @@
-<!-- src/app/shared/components/header/header.component.html -->
 <mat-toolbar class="header">
   <span class="brand">ShoppingMart</span>
   <span class="spacer"></span>
@@ -23,6 +22,9 @@
       </button>
       <button mat-button routerLink="/wishlist" class="customer-nav">
         <mat-icon>favorite</mat-icon> {{ wishlistCount$ | async }}
+      </button>
+      <button mat-button routerLink="/orders" class="customer-nav">
+        <mat-icon>list_alt</mat-icon> Orders
       </button>
     </ng-container>
     <ng-container *ngIf="user.role === 'vendor'">

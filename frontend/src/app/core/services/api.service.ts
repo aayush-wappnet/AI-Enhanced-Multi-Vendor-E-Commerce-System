@@ -1,6 +1,8 @@
+// src/app/core/services/api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable({
@@ -8,6 +10,8 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ApiService {
   apiUrl = 'http://localhost:5000/api';
+  private cartCountSubject = new BehaviorSubject<number>(0);
+  public cartCount$ = this.cartCountSubject.asObservable();
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -39,10 +43,12 @@ export class ApiService {
   }
 
   delete<T>(url: string): Observable<T> {
-    return this.http.delete<T>(url, { headers: this.getHeaders() });
+    return this.http.delete<T>(url, { headers: this.getHeaders() }).pipe(
+      switchMap(() => this.getCart())
+    );
   }
 
-  // ... rest of your existing methods remain unchanged ...
+  // Specific methods
   getProducts(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/products`, { headers: this.getHeaders() });
   }
@@ -52,18 +58,22 @@ export class ApiService {
   }
 
   getCart(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/cart`, { headers: this.getHeaders() });
+    return this.http.get<any>(`${this.apiUrl}/cart`, { headers: this.getHeaders() }).pipe(
+      tap(cart => this.cartCountSubject.next(cart.items?.length || 0))
+    );
   }
 
-  addToCart(data: { productId: string; quantity: number }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/cart`, data, { headers: this.getHeaders() });
+  addToCart(data: { productId: string | number; quantity: number }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/cart`, data, { headers: this.getHeaders() }).pipe(
+      switchMap(() => this.getCart())
+    );
   }
 
-  removeFromCart(productId: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/cart/${productId}`, { headers: this.getHeaders() });
+  removeFromCart(cartItemId: string | number): Observable<any> {
+    return this.delete(`${this.apiUrl}/cart/item/${cartItemId}`);
   }
 
-  addToWishlist(productId: string): Observable<any> {
+  addToWishlist(productId: string | number): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/wishlist`, { productId }, { headers: this.getHeaders() });
   }
 
@@ -86,9 +96,6 @@ export class ApiService {
   addProduct(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/products`, data, { headers: this.getHeaders() });
   }
-
-
-
 
   // Admin-specific methods
   getAllVendors(): Observable<any[]> {
@@ -114,6 +121,18 @@ export class ApiService {
   rejectProduct(id: number): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/products/${id}/reject`, {}, { headers: this.getHeaders() });
   }
+
+  // Order-specific methods
+  getOrders(): Observable<any[]> {
+    console.log('Fetching orders from API...');
+    return this.get<any[]>(`${this.apiUrl}/orders`);
+  }
+
+  getOrderById(id: number): Observable<any> {
+    return this.get<any>(`${this.apiUrl}/orders/${id}`);
+  }
+
+
 
 
 }

@@ -1,42 +1,35 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
-import { Payment } from './entities/payment.entity';
 import { ProductsService } from '../products/products.service';
 import { CartService } from '../cart/cart.service';
 import { UsersService } from '../users/users.service';
-import Stripe from 'stripe';
+import { PaymentsService } from '../payments/payments.service';
+import { Payment } from '../payments/payment.entity';
 
 @Injectable()
 export class OrdersService {
-  private stripe: Stripe;
-
   constructor(
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
     @InjectRepository(OrderItem)
     private orderItemRepository: Repository<OrderItem>,
-    @InjectRepository(Payment)
-    private paymentRepository: Repository<Payment>,
     private productsService: ProductsService,
     private cartService: CartService,
     private usersService: UsersService,
-  ) {
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
-    if (!stripeKey) throw new Error('STRIPE_SECRET_KEY is not defined in .env');
-    this.stripe = new Stripe(stripeKey, { apiVersion: '2025-03-31.basil' }); // Updated to latest API version
-  }
+    @Inject(forwardRef(() => PaymentsService)) // Explicitly handle circular dependency
+    private paymentsService: PaymentsService,
+  ) {}
 
-  async checkout(userId: number, paymentMethodId: string): Promise<Order> {
+  async checkout(userId: number): Promise<Order> {
     const user = await this.usersService.findById(userId);
     if (!user) throw new NotFoundException('User not found');
 
     const cart = await this.cartService.getCart(user);
     if (!cart || !cart.items.length) throw new BadRequestException('Cart is empty');
 
-    // Calculate total and prepare order items
     const orderItems = await Promise.all(
       cart.items.map(async (item) => {
         const product = await this.productsService.findById(item.product.id);
@@ -56,7 +49,6 @@ export class OrdersService {
 
     const totalAmount = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    // Create order (pending)
     const order = this.orderRepository.create({
       user,
       orderItems,
@@ -64,53 +56,29 @@ export class OrdersService {
       status: 'pending',
     });
 
-    // Process payment
-    try {
-      const paymentIntent = await this.stripe.paymentIntents.create({
-        amount: Math.round(totalAmount * 100), // Convert to cents
-        currency: 'usd',
-        payment_method: paymentMethodId,
-        confirmation_method: 'manual',
-        confirm: true,
-      });
+    return this.orderRepository.save(order);
+  }
 
-      if (paymentIntent.status === 'succeeded') {
-        const payment = this.paymentRepository.create({
-          order,
-          user,
-          transactionId: paymentIntent.id,
-          amount: totalAmount,
-          status: 'completed',
-          paymentMethod: 'stripe',
-        });
-        await this.paymentRepository.save(payment);
+  async confirmOrder(orderId: number, payment: Payment): Promise<Order> {
+    const order = await this.findById(orderId);
+    if (!order) throw new NotFoundException('Order not found');
 
-        // Update order and stock
-        order.status = 'confirmed';
-        order.payment = payment;
-        await this.orderRepository.save(order);
+    order.status = 'confirmed';
+    order.payment = payment;
+    await this.orderRepository.save(order);
 
-        // Update product stock
-        await Promise.all(
-          orderItems.map(async (item) => {
-            const product = await this.productsService.findById(item.product.id);
-            if (!product) throw new NotFoundException(`Product ${item.product.id} not found during stock update`);
-            product.stock -= item.quantity;
-            await this.productsService.update(product.id, { stock: product.stock });
-          }),
-        );
+    await Promise.all(
+      order.orderItems.map(async (item) => {
+        const product = await this.productsService.findById(item.product.id);
+        if (!product) throw new NotFoundException(`Product ${item.product.id} not found during stock update`);
+        product.stock -= item.quantity;
+        await this.productsService.update(product.id, { stock: product.stock });
+      }),
+    );
 
-        // Clear cart
-        await this.cartService.clearCart(user);
+    await this.cartService.clearCart(order.user);
 
-        return order;
-      } else {
-        throw new BadRequestException('Payment requires further action');
-      }
-    } catch (error) {
-      console.error('Payment Error:', error);
-      throw new BadRequestException(`Payment failed: ${error.message}`);
-    }
+    return order;
   }
 
   async findById(id: number): Promise<Order | null> {

@@ -16,7 +16,7 @@
           <img [src]="item.product.imageUrls[0]" alt="{{ item.product.name }}" class="product-image" *ngIf="item.product.imageUrls?.length">
           <span class="product-name">{{ item.product.name }}</span>
         </div>
-        <div class="item-cell">{{ item.product.price | currency:'USD' }}</div>
+        <div class="item-cell">{{ item.product.price | currency:'INR' }}</div>
         <div class="item-cell quantity-control">
           <button mat-icon-button color="primary" (click)="decrementQuantity(item.id, item.quantity)">
             <mat-icon>remove</mat-icon>
@@ -26,20 +26,28 @@
             <mat-icon>add</mat-icon>
           </button>
         </div>
-        <div class="item-cell">{{ calculateItemTotal(item.product.price, item.quantity) | currency:'USD' }}</div>
+        <div class="item-cell">{{ calculateItemTotal(item.product.price, item.quantity) | currency:'INR' }}</div>
       </div>
       <div class="cart-totals" *ngIf="cart.items.length > 0">
         <div class="totals-row">
           <span>Subtotal</span>
-          <span>{{ calculateTotal(cart) | currency:'USD' }}</span>
+          <span>{{ calculateTotal(cart) | currency:'INR' }}</span>
         </div>
         <div class="totals-row total-row">
           <span>Total</span>
-          <span>{{ calculateTotal(cart) | currency:'USD' }}</span>
+          <span>{{ calculateTotal(cart) | currency:'INR' }}</span>
         </div>
       </div>
-      <div class="checkout-button" *ngIf="cart.items.length > 0">
+      <div class="checkout-section" *ngIf="cart.items.length > 0">
         <button mat-raised-button color="primary" (click)="checkout()">Proceed to Checkout</button>
+        <!-- Checkout Form -->
+        <div *ngIf="orderId" class="payment-container">
+          <div #cardElement class="card-element"></div>
+          <input placeholder="Full Name" #nameElement />
+          <input placeholder="Address Line 1" #addressElement />
+          <div *ngIf="paymentError" class="error-message">{{ paymentError }}</div>
+          <div *ngIf="paymentSuccess" class="success-message">Payment successful! Order confirmed.</div>
+        </div>
       </div>
       <p class="empty-cart" *ngIf="cart.items.length === 0">Your cart is empty.</p>
     </div>

@@ -122,7 +122,7 @@
   color: #000;
 }
 
-.checkout-button {
+.checkout-section {
   text-align: right;
   margin-top: 10px;
 
@@ -139,6 +139,32 @@
       background-color: #333;
     }
   }
+}
+
+.payment-container {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.card-element {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: #ff0000;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.success-message {
+  color: #008000;
+  font-size: 1rem;
+  margin-top: 10px;
 }
 
 .empty-cart {

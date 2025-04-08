@@ -1,0 +1,57 @@
+<div class="order-container">
+    <h1 class="order-title">My Orders</h1>
+  
+    <!-- Order List -->
+    <div class="order-list" *ngIf="orders$ | async as orders">
+      <div class="order-card" *ngFor="let order of orders" (click)="viewDetails(order)" [class.selected]="selectedOrder?.id === order.id">
+        <div class="order-header">
+          <h2>Order #{{ order.id }}</h2>
+          <span class="order-status" [ngClass]="{'pending': order.status === 'pending', 'confirmed': order.status === 'confirmed'}">
+            {{ order.status }}
+          </span>
+        </div>
+        <div class="order-details">
+          <p><strong>Total:</strong> {{ order.totalAmount | currency:'INR' }}</p>
+          <p><strong>Date:</strong> {{ order.createdAt | date:'medium' }}</p>
+          <button mat-raised-button color="primary" (click)="loadOrderById(order.id); $event.stopPropagation()">View Details</button>
+        </div>
+      </div>
+      <p class="no-orders" *ngIf="orders.length === 0">No orders found.</p>
+    </div>
+  
+    <!-- Order Details -->
+    <div class="order-details-container" *ngIf="selectedOrder">
+      <div class="order-detail-card">
+        <h2>Order #{{ selectedOrder.id }} Details</h2>
+        <div class="detail-section">
+          <h3>Customer</h3>
+          <p><strong>Name:</strong> {{ selectedOrder.user?.firstName }} {{ selectedOrder.user?.lastName }}</p>
+          <p><strong>Email:</strong> {{ selectedOrder.user?.email }}</p>
+        </div>
+        <div class="detail-section">
+          <h3>Order Items</h3>
+          <div class="item-list" *ngFor="let item of selectedOrder.orderItems">
+            <img [src]="item.product.imageUrls[0]" alt="{{ item.product.name }}" class="item-image">
+            <div class="item-info">
+              <p><strong>Product:</strong> {{ item.product.name }}</p>
+              <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+              <p><strong>Price:</strong> {{ item.price | currency:'INR' }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3>Payment</h3>
+          <p *ngIf="selectedOrder.payment"><strong>Transaction ID:</strong> {{ selectedOrder.payment.transactionId }}</p>
+          <p *ngIf="selectedOrder.payment"><strong>Amount:</strong> {{ selectedOrder.payment.amount | currency:'INR' }}</p>
+          <p *ngIf="selectedOrder.payment"><strong>Status:</strong> {{ selectedOrder.payment.status }}</p>
+          <p *ngIf="!selectedOrder.payment">Payment pending</p>
+        </div>
+        <div class="detail-section">
+          <p><strong>Total Amount:</strong> {{ selectedOrder.totalAmount | currency:'INR' }}</p>
+          <p><strong>Status:</strong> {{ selectedOrder.status }}</p>
+          <p><strong>Created:</strong> {{ selectedOrder.createdAt | date:'medium' }}</p>
+        </div>
+        <button mat-raised-button color="accent" (click)="selectedOrder = null">Back to Orders</button>
+      </div>
+    </div>
+  </div>
