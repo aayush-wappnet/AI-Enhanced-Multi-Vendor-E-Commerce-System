@@ -13,7 +13,7 @@ import { AdminProductsComponent } from './features/admin/admin-products/admin-pr
 export const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: '/products',
+    redirectTo: '/auth/login',
     pathMatch: 'full'
   },
 

@@ -12,25 +12,28 @@
       </mat-card-content>
       <mat-card-actions>
         <div class="cart-controls">
-          <!-- Show Add to Cart button if not yet added -->
-          <button *ngIf="!quantities[product.id]" mat-raised-button color="accent" (click)="addToCart(product.id, 0, $event)">
+          <!-- Show Add to Cart button if not in cart -->
+          <button
+            *ngIf="!quantities[product.id]"
+            mat-raised-button
+            color="accent"
+            (click)="addToCart(product.id, $event)"
+          >
             <mat-icon>shopping_cart</mat-icon> Add to Cart
           </button>
-          <!-- Show quantity controls if added to cart -->
-          <div *ngIf="quantities[product.id]" class="quantity-controls">
-            <button mat-icon-button color="accent" (click)="addToCart(product.id, -1, $event)">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <span class="quantity">{{ quantities[product.id] }}</span>
-            <button mat-icon-button color="accent" (click)="addToCart(product.id, 1, $event)">
-              <mat-icon>add</mat-icon>
+          <!-- Show Added to Cart and Remove icon if in cart -->
+          <div *ngIf="quantities[product.id]" class="added-controls">
+            <span class="added-text">Added to Cart</span>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="addToCart(product.id, $event)"
+              class="remove-button"
+            >
+              <mat-icon>delete</mat-icon>
             </button>
           </div>
         </div>
-        <!-- Commented out wishlist button -->
-        <!-- <button mat-icon-button [color]="wishlist[product.id] ? 'warn' : 'accent'" (click)="toggleWishlist(product.id, $event)">
-          <mat-icon>{{ wishlist[product.id] ? 'favorite' : 'favorite_border' }}</mat-icon>
-        </button> -->
       </mat-card-actions>
     </mat-card>
   </div>

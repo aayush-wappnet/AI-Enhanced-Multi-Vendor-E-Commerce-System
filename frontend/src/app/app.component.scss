@@ -1,0 +1,28 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    // min-height: 70vh;
+
+  }
+  
+  router-outlet {
+    flex: 1 0 auto;
+    margin-top: auto;
+  }
+  
+app-footer {
+    flex-shrink: 0;
+    // background-color: #6a0dad;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    margin-bottom: 0;
+  
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  }

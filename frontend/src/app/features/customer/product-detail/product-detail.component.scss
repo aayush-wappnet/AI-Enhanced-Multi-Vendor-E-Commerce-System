@@ -88,10 +88,29 @@
     align-items: center;
     gap: 10px;
 
-    .quantity-controls {
+    .added-controls {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 10px;
+
+      .added-text {
+        font-size: 1rem;
+        color: #ff5722; // Matches the theme
+        font-weight: 500;
+        padding: 5px 10px;
+        background-color: #ffe0e0; // Light red background
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .remove-button {
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: scale(1.1);
+          color: #d32f2f; // Darker red on hover
+        }
+      }
     }
 
     button {

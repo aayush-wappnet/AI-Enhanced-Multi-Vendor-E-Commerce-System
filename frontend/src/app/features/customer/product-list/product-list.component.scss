@@ -76,9 +76,29 @@
       align-items: center;
       gap: 10px;
 
-      .quantity-controls {
+      .added-controls {
         display: flex;
         align-items: center;
+        gap: 10px;
+
+        .added-text {
+          font-size: 1rem;
+          color: #2e7d32;
+          font-weight: 500;
+          padding: 5px 10px;
+          background-color: #e8f5e9;
+          border-radius: 4px;
+          transition: all 0.3s ease;
+        }
+
+        .remove-button {
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: scale(1.1);
+            color: #d32f2f; // Darker red on hover
+          }
+        }
       }
 
       button {
@@ -86,7 +106,7 @@
         color: white; // White text/icon for contrast
         width: 140px; // Wider button for better visibility
         height: 40px;
-        border-radius: 8px; // Rounded corners, less extreme than the image
+        border-radius: 8px; // Rounded corners
         font-size: 1rem;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -106,7 +126,6 @@
         &:hover {
           background-color: #1b5e20; // Darker green on hover
           transform: scale(1.05); // Match card hover effect
-          transition: ease-in;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); // Subtle shadow on hover
         }
 
@@ -115,23 +134,6 @@
           opacity: 0.7;
           cursor: not-allowed;
         }
-      }
-
-      .quantity {
-        font-size: 1.2rem;
-        color: #2e7d32;
-        margin: 0 10px;
-        font-weight: 500;
-        min-width: 20px;
-        text-align: center;
-      }
-    }
-
-    button {
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: scale(1.05);
       }
     }
   }

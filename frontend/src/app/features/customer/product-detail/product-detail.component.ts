@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-detail',
@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 })
 export class ProductDetailComponent implements OnInit {
   product$: Observable<any> = of({});
-  quantities: { [key: string]: number } = {}; // Track quantity per product ID
+  quantities: { [productId: string]: { cartItemId: number; present: boolean } } = {}; // Store cartItemId and presence
 
   constructor(private apiService: ApiService, private route: ActivatedRoute) {}
 
@@ -25,39 +25,60 @@ export class ProductDetailComponent implements OnInit {
     const productId = this.route.snapshot.paramMap.get('id');
     if (productId) {
       this.product$ = this.apiService.getProduct(+productId).pipe(
-        map(product => product || {})
+        map(product => product || {}),
+        tap(product => {
+          // Initialize quantities based on cart contents for this product
+          this.apiService.getCart().subscribe({
+            next: (cart) => {
+              const item = cart.items.find((i: { product: { id: string | number } }) => i.product.id === product.id);
+              if (item) {
+                this.quantities[product.id] = { cartItemId: item.id, present: true };
+              }
+            },
+            error: (err) => console.error('Error fetching cart', err)
+          });
+        })
       );
     }
   }
 
-  addToCart(productId: string, delta: number = 0, event?: Event) {
+  addToCart(productId: string, event?: Event) {
     event?.stopPropagation(); // Prevent any parent click events if applicable
-    const currentProductId = productId;
 
-    if (!this.quantities[currentProductId] && delta === 0) {
-      this.quantities[currentProductId] = 1; // Initial add sets quantity to 1
-    } else if (delta !== 0) {
-      const newQuantity = (this.quantities[currentProductId] || 0) + delta;
-      if (newQuantity <= 0) {
-        delete this.quantities[currentProductId]; // Remove from quantities to show Add to Cart button
-        this.apiService.removeFromCart(currentProductId).subscribe({
-          next: () => {
-            console.log('Removed from cart', currentProductId);
-            // Force UI update by triggering change detection (optional, may not be needed with async pipe)
-          },
-          error: (err) => console.error('Error removing from cart', err)
-        });
-        return;
-      }
-      this.quantities[currentProductId] = Math.max(1, newQuantity); // Ensure quantity doesn’t go below 1 (unless removed)
+    if (this.quantities[productId] && this.quantities[productId].present) {
+      // Remove from cart using cartItemId
+      const cartItemId = this.quantities[productId].cartItemId;
+      delete this.quantities[productId];
+      this.apiService.delete(`${this.apiService.apiUrl}/cart/item/${cartItemId}`).pipe(
+        switchMap(() => this.apiService.getCart())
+      ).subscribe({
+        next: (cart) => {
+          // Update quantities based on the refreshed cart
+          this.quantities = {};
+          cart.items.forEach((item: { id: number; product: { id: string | number }; quantity: number }) => {
+            this.quantities[item.product.id] = { cartItemId: item.id, present: true };
+          });
+          console.log('Removed from cart', productId);
+        },
+        error: (err) => console.error('Error removing from cart', err)
+      });
+    } else {
+      // Add to cart with default quantity 1
+      this.quantities[productId] = { cartItemId: -1, present: true }; // Temporary cartItemId
+      this.apiService.addToCart({ productId, quantity: 1 }).pipe(
+        switchMap(() => this.apiService.getCart())
+      ).subscribe({
+        next: (cart) => {
+          // Update quantities with the new cartItemId from the refreshed cart
+          this.quantities = {};
+          cart.items.forEach((item: { id: number; product: { id: string | number }; quantity: number }) => {
+            this.quantities[item.product.id] = { cartItemId: item.id, present: true };
+          });
+          console.log('Added to cart', productId);
+        },
+        error: (err) => console.error('Error adding to cart', err)
+      });
     }
-
-    this.apiService.addToCart({ productId: currentProductId, quantity: this.quantities[currentProductId] }).subscribe({
-      next: () => {
-        console.log('Added to cart', currentProductId, 'Quantity:', this.quantities[currentProductId]);
-      },
-      error: (err) => console.error('Error adding to cart', err)
-    });
   }
 
   addToWishlist(productId: string) {
@@ -65,13 +86,5 @@ export class ProductDetailComponent implements OnInit {
       next: () => console.log('Added to wishlist', productId),
       error: (err) => console.error('Error adding to wishlist', err)
     });
-  }
-
-  decrementQuantity(productId: string, event: Event) {
-    this.addToCart(productId, -1, event);
-  }
-
-  incrementQuantity(productId: string, event: Event) {
-    this.addToCart(productId, 1, event);
   }
 }

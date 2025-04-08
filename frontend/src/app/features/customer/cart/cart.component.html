@@ -1,22 +1,47 @@
-<!-- src/app/features/customer/cart/cart.component.html -->
 <div class="cart-container">
-    <h1 class="title"><mat-icon>shopping_cart</mat-icon> Your Cart</h1>
+  <h1 class="cart-title">Shopping Cart</h1>
+  <div class="cart-content">
     <div class="cart-items" *ngIf="cart$ | async as cart">
-      <mat-card class="cart-item" *ngFor="let item of cart.items">
-        <mat-card-header>
-          <mat-card-title>{{ item.name }}</mat-card-title>
-          <mat-card-subtitle>{{ item.price | currency:'USD' }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions>
-          <button mat-raised-button color="warn" (click)="removeFromCart(item.id)">
-            <mat-icon>delete</mat-icon> Remove
-          </button>
-        </mat-card-actions>
-      </mat-card>
-      <div class="cart-total" *ngIf="cart.items.length > 0">
-        <h2>Total: {{ cart.total | currency:'USD' }}</h2>
-        <button mat-raised-button color="primary" (click)="checkout()">Checkout</button>
+      <div class="cart-header">
+        <div class="header-cell">Product</div>
+        <div class="header-cell">Price</div>
+        <div class="header-cell">Quantity</div>
+        <div class="header-cell">Subtotal</div>
       </div>
-      <p *ngIf="cart.items.length === 0">Your cart is empty.</p>
+      <div class="cart-item" *ngFor="let item of cart.items">
+        <div class="item-cell">
+          <button mat-icon-button color="warn" (click)="removeFromCart(item.id)" class="remove-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+          <img [src]="item.product.imageUrls[0]" alt="{{ item.product.name }}" class="product-image" *ngIf="item.product.imageUrls?.length">
+          <span class="product-name">{{ item.product.name }}</span>
+        </div>
+        <div class="item-cell">{{ item.product.price | currency:'USD' }}</div>
+        <div class="item-cell quantity-control">
+          <button mat-icon-button color="primary" (click)="decrementQuantity(item.id, item.quantity)">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span class="quantity">{{ item.quantity }}</span>
+          <button mat-icon-button color="primary" (click)="incrementQuantity(item.id, item.quantity, item.product.stock)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <div class="item-cell">{{ calculateItemTotal(item.product.price, item.quantity) | currency:'USD' }}</div>
+      </div>
+      <div class="cart-totals" *ngIf="cart.items.length > 0">
+        <div class="totals-row">
+          <span>Subtotal</span>
+          <span>{{ calculateTotal(cart) | currency:'USD' }}</span>
+        </div>
+        <div class="totals-row total-row">
+          <span>Total</span>
+          <span>{{ calculateTotal(cart) | currency:'USD' }}</span>
+        </div>
+      </div>
+      <div class="checkout-button" *ngIf="cart.items.length > 0">
+        <button mat-raised-button color="primary" (click)="checkout()">Proceed to Checkout</button>
+      </div>
+      <p class="empty-cart" *ngIf="cart.items.length === 0">Your cart is empty.</p>
     </div>
   </div>
+</div>
