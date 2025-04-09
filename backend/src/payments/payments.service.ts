@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, BadRequestException, Inject, forwardRef ,NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from './payment.entity';
@@ -64,4 +64,18 @@ export class PaymentsService {
 
     return payment;
   }
+
+
+  // payments.service.ts (add this method)
+async updatePaymentStatus(paymentId: number, status: 'pending' | 'completed' | 'failed'): Promise<Payment> {
+  const payment = await this.paymentRepository.findOne({ where: { id: paymentId } });
+  if (!payment) throw new NotFoundException('Payment not found');
+  payment.status = status;
+  if (status === 'failed' && payment.transactionId) {
+    await this.stripe.paymentIntents.cancel(payment.transactionId); // Refund or cancel
+  }
+  return this.paymentRepository.save(payment);
+}
+
+
 }

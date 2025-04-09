@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ApiService {
   apiUrl = `${environment.apiUrl}`;
-  private cartCountSubject = new BehaviorSubject<number>(0);
+  cartCountSubject = new BehaviorSubject<number>(0);
   public cartCount$ = this.cartCountSubject.asObservable();
 
   constructor(private http: HttpClient, private authService: AuthService) {}
@@ -26,7 +26,6 @@ export class ApiService {
   // Add this new method for FormData posts
   postFormData<T>(url: string, formData: FormData): Observable<T> {
     const headers = this.getHeaders();
-    // Note: We don't set Content-Type header - browser will set it automatically with boundary
     return this.http.post<T>(url, formData, { headers });
   }
 
@@ -143,7 +142,44 @@ export class ApiService {
     return this.http.put<any>(`${this.apiUrl}/products/${id}/reject`, {}, { headers: this.getHeaders() });
   }
 
-  // Order-specific methods
+  // Order management methods
+  getAllOrders(): Observable<any[]> {
+    return this.get<any[]>(`${this.apiUrl}/orders/all-orders`);
+  }
+
+  updateOrderStatus(id: number, status: string): Observable<any> {
+    return this.put<any>(`${this.apiUrl}/orders/${id}/status`, { status });
+  }
+
+  // New method for canceling order
+  cancelOrder(id: number): Observable<any> {
+    return this.put<any>(`${this.apiUrl}/orders/${id}/cancel`, {}).pipe(
+      switchMap(() => this.getOrders()) // Refresh orders after cancellation
+    );
+  }
+
+  // Sales-related methods
+  getTotalProductsSold(): Observable<number> {
+    return this.get<number>(`${this.apiUrl}/orders/sales/total-products-sold`);
+  }
+
+  getTotalSales(): Observable<number> {
+    return this.get<number>(`${this.apiUrl}/orders/sales/total-sales`);
+  }
+
+  getMostSoldProduct(): Observable<any> {
+    return this.get<any>(`${this.apiUrl}/orders/sales/most-sold-product`);
+  }
+
+  getTotalOrders(): Observable<number> {
+    return this.get<number>(`${this.apiUrl}/orders/sales/total-orders`);
+  }
+
+  getRevenueByStatus(): Observable<any[]> {
+    return this.get<any[]>(`${this.apiUrl}/orders/sales/revenue-by-status`);
+  }
+
+  // Existing order methods
   getOrders(): Observable<any[]> {
     console.log('Fetching orders from API...');
     return this.get<any[]>(`${this.apiUrl}/orders`);

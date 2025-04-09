@@ -1,3 +1,4 @@
+<!-- src/app/shared/components/header/header.component.html -->
 <mat-toolbar class="header">
   <span class="brand">ShoppingMart</span>
   <span class="spacer"></span>
@@ -10,9 +11,6 @@
     </button>
   </div>
   <div *ngIf="(user$ | async) as user" class="nav-links">
-    <!-- <button mat-button routerLink="/home">
-      <mat-icon>home</mat-icon> Home
-    </button> -->
     <ng-container *ngIf="user.role === 'customer' || !user.role">
       <button mat-button routerLink="/products" class="customer-nav">
         <mat-icon>storefront</mat-icon> Products
@@ -47,6 +45,9 @@
       </button>
       <button mat-button routerLink="/admin/products" class="admin-nav">
         <mat-icon>inventory</mat-icon> Products
+      </button>
+      <button mat-button routerLink="/admin/manage-orders" class="admin-nav">
+        <mat-icon>edit_note</mat-icon> Manage Orders
       </button>
     </ng-container>
     <mat-menu #menu="matMenu">

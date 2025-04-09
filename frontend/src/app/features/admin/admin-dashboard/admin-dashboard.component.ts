@@ -12,7 +12,7 @@ import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatTableModule, AsyncPipe],
+  imports: [CommonModule, MatIconModule, MatCardModule, MatTableModule, AsyncPipe],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
 })
@@ -24,6 +24,9 @@ export class AdminDashboardComponent implements OnInit {
   pendingVendorsCount$: Observable<number>;
   approvedVendorsCount$: Observable<number>;
   rejectedVendorsCount$: Observable<number>;
+  totalOrders$: Observable<number>;
+  totalSales$: Observable<number>;
+  totalProductsSold$: Observable<number>;
 
   constructor(private apiService: ApiService) {
     this.vendorsCount$ = this.apiService.getAllVendors().pipe(
@@ -41,6 +44,13 @@ export class AdminDashboardComponent implements OnInit {
     this.pendingVendorsCount$ = this.apiService.getPendingVendorsCount();
     this.approvedVendorsCount$ = this.apiService.getApprovedVendorsCount();
     this.rejectedVendorsCount$ = this.apiService.getRejectedVendorsCount();
+    this.totalOrders$ = this.apiService.getTotalOrders();
+    this.totalSales$ = this.apiService.getTotalSales().pipe(
+      map(sales => sales || 0) // Handle null/undefined
+    );
+    this.totalProductsSold$ = this.apiService.getTotalProductsSold().pipe(
+      map(productsSold => productsSold || 0) // Handle null/undefined
+    );
   }
 
   ngOnInit() {}

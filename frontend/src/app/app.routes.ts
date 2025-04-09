@@ -9,6 +9,7 @@ import { AddProductComponent } from './features/vendor/add-product/add-product.c
 import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { AdminVendorsComponent } from './features/admin/admin-vendors/admin-vendors.component';
 import { AdminProductsComponent } from './features/admin/admin-products/admin-products.component';  
+import { ManageOrdersComponent } from './features/admin/manage-orders/manage-orders.component';
 
 export const appRoutes: Routes = [
   {
@@ -39,7 +40,8 @@ export const appRoutes: Routes = [
     children: [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'vendors', component: AdminVendorsComponent },
-      { path: 'products', component: AdminProductsComponent }
+      { path: 'products', component: AdminProductsComponent },
+      { path: 'manage-orders', component: ManageOrdersComponent}
     ]
   }
 

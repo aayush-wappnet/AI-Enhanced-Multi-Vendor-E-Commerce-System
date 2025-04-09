@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from '../../../core/services/api.service';
-import { BehaviorSubject } from 'rxjs'; // Import BehaviorSubject
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -30,8 +30,8 @@ import { BehaviorSubject } from 'rxjs'; // Import BehaviorSubject
 })
 export class HeaderComponent implements OnInit {
   user$: Observable<any>;
-  cartCount$!: Observable<number>; // Use definite assignment assertion
-  wishlistCount$ = new BehaviorSubject<number>(0); // Initialize wishlist count
+  cartCount$!: Observable<number>;
+  wishlistCount$ = new BehaviorSubject<number>(0);
 
   constructor(
     private authService: AuthService,
@@ -44,12 +44,15 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Safely initialize cartCount$ after apiService is available
     this.cartCount$ = this.apiService.cartCount$;
-    // Fetch wishlist count (replace with correct endpoint if available)
-    this.apiService.getCart().subscribe(wishlist => {
-      this.wishlistCount$.next(wishlist.items?.length || 0);
+    // Assuming wishlist has a separate endpoint (e.g., /wishlist). Adjust if different.
+    this.apiService.getCart().subscribe(cart => {
+      this.wishlistCount$.next(cart.items?.length || 0); // Note: This should ideally be getWishlist if separate
     });
+    // If wishlist is separate, uncomment and adjust the endpoint:
+    // this.apiService.getWishlist().subscribe(wishlist => {
+    //   this.wishlistCount$.next(wishlist.length || 0);
+    // });
   }
 
   logout() {
@@ -59,14 +62,25 @@ export class HeaderComponent implements OnInit {
 
   addToCart(productId: string) {
     this.apiService.addToCart({ productId, quantity: 1 }).subscribe({
-      next: () => console.log('Added to cart from header', productId),
+      next: () => {
+        console.log('Added to cart from header', productId);
+        this.apiService.getCart().subscribe(cart => {
+          this.apiService.cartCountSubject.next(cart.items?.length || 0);
+        });
+      },
       error: (err) => console.error('Error adding to cart', err)
     });
   }
 
   addToWishlist(productId: string) {
     this.apiService.addToWishlist(productId).subscribe({
-      next: () => console.log('Added to wishlist', productId), // Removed updateCounts reference
+      next: () => {
+        console.log('Added to wishlist', productId);
+        // Update wishlist count if a separate endpoint exists
+        // this.apiService.getWishlist().subscribe(wishlist => {
+        //   this.wishlistCount$.next(wishlist.length || 0);
+        // });
+      },
       error: (err) => console.error('Error adding to wishlist', err)
     });
   }

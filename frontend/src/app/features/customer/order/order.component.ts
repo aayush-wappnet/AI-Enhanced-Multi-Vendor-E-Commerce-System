@@ -1,3 +1,4 @@
+// src/app/order/order.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { CommonModule } from '@angular/common';
@@ -6,6 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmDialogComponent } from './confirm-dialog.component'; // Assuming you have a confirmation dialog component
 
 // Interfaces based on the API response
 interface Product {
@@ -73,7 +77,11 @@ export class OrderComponent implements OnInit {
   orders$: Observable<Order[]> = of([]);
   selectedOrder: Order | null = null;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.loadOrders();
@@ -93,4 +101,28 @@ export class OrderComponent implements OnInit {
   viewDetails(order: Order) {
     this.selectedOrder = order;
   }
+
+  cancelOrder(orderId: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: { orderId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService.cancelOrder(orderId).subscribe({
+          next: () => {
+            this.snackBar.open('Order cancelled successfully', 'Close', { duration: 3000 });
+            this.loadOrders(); // Refresh the order list
+            this.selectedOrder = null; // Clear selected order
+          },
+          error: (err) => {
+            this.snackBar.open('Error cancelling order: ' + err.message, 'Close', { duration: 3000 });
+            console.error(err);
+          }
+        });
+      }
+    });
+  }
 }
+

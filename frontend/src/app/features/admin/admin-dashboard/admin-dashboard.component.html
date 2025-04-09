@@ -70,6 +70,33 @@
             <h2>{{ rejectedVendorsCount$ | async }}</h2>
           </mat-card-content>
         </mat-card>
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <mat-icon>list_alt</mat-icon>
+            <mat-card-title>Total Orders</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ totalOrders$ | async }}</h2>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <!-- <mat-icon>attach_money</mat-icon> -->
+            <mat-card-title>Total Sales ₹</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ totalSales$ | async | currency:'INR' }}</h2>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-card-header>
+            <mat-icon>shopping_cart</mat-icon>
+            <mat-card-title>Total Products Sold</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ totalProductsSold$ | async }}</h2>
+          </mat-card-content>
+        </mat-card>
       </div>
     </mat-card-content>
   </mat-card>
