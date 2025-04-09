@@ -35,6 +35,10 @@ export class VendorRepository {
     return this.categoryRepository.findOne({ where: { id } });
   }
 
+  async countByStatus(status: 'pending' | 'approved' | 'rejected'): Promise<number> {
+    return this.vendorRepository.count({ where: { status } });
+  }
+
   async create(createVendorDto: CreateVendorDto, user: any, category: any): Promise<Vendor> {
     const vendor = this.vendorRepository.create({
       name: createVendorDto.name,

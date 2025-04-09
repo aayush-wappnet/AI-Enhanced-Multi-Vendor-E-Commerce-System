@@ -30,6 +30,13 @@ export class ProductRepository {
     });
   }
 
+  async findByStatus(status: 'approved' | 'rejected'): Promise<Product[]> {
+    return this.productRepository.find({
+      where: { status },
+      relations: ['vendor', 'category', 'subcategory'],
+    });
+  }
+
   async findById(id: number): Promise<Product | null> {
     return this.productRepository.findOne({ where: { id }, relations: ['vendor', 'category', 'subcategory'] });
   }

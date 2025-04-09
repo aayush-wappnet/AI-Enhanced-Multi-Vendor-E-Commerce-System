@@ -19,6 +19,11 @@ import { AsyncPipe } from '@angular/common';
 export class AdminDashboardComponent implements OnInit {
   vendorsCount$: Observable<number>;
   productsCount$: Observable<number>;
+  approvedProductsCount$: Observable<number>;
+  rejectedProductsCount$: Observable<number>;
+  pendingVendorsCount$: Observable<number>;
+  approvedVendorsCount$: Observable<number>;
+  rejectedVendorsCount$: Observable<number>;
 
   constructor(private apiService: ApiService) {
     this.vendorsCount$ = this.apiService.getAllVendors().pipe(
@@ -27,6 +32,15 @@ export class AdminDashboardComponent implements OnInit {
     this.productsCount$ = this.apiService.getAllProducts().pipe(
       map(products => products.length)
     );
+    this.approvedProductsCount$ = this.apiService.getApprovedProducts().pipe(
+      map(products => products.length)
+    );
+    this.rejectedProductsCount$ = this.apiService.getRejectedProducts().pipe(
+      map(products => products.length)
+    );
+    this.pendingVendorsCount$ = this.apiService.getPendingVendorsCount();
+    this.approvedVendorsCount$ = this.apiService.getApprovedVendorsCount();
+    this.rejectedVendorsCount$ = this.apiService.getRejectedVendorsCount();
   }
 
   ngOnInit() {}

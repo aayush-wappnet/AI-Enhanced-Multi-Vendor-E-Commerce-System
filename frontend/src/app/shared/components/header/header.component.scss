@@ -24,13 +24,14 @@
 }
 
 button {
-  color: white; // Default text color for most buttons
-  margin: 0 10px;
+  color: black; // Default text color for most buttons
+  // margin: 0 10px;
   font-size: 0.9rem;
   text-transform: uppercase;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  margin-right: 20px;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -51,12 +52,13 @@ button {
 
   // Styling for customer navigation buttons
   &.customer-nav {
-    color: white;
+    color: black;
     background-color: rgba(255, 255, 255, 0.15);
     &:hover {
       background-color: rgba(255, 255, 255, 0.25);
       transform: translateY(-2px); // Hover effect
     }
+
 
     mat-icon {
       margin-right: 5px;

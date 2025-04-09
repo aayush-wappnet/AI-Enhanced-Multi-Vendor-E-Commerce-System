@@ -1,19 +1,59 @@
-// src/app/admin/admin-products/admin-products.component.scss
 .products-container {
-    padding: 20px;
+  padding: 20px;
+}
+
+h2 {
+  color: #1976d2; // Blue header
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.products-table {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  th,
+  td {
+    color: #333; // Dark text for table content
   }
-  
-  h2 {
-    color: #1976d2;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+
+  mat-icon-button {
+    margin: 0 5px;
+    transition: transform 0.2s ease;
+
+    &[color="primary"] {
+      background-color: #4caf50; // Green for approve
+      &:hover:not([disabled]) {
+        background-color: #45a049;
+        transform: scale(1.1);
+      }
+      &:disabled {
+        background-color: #a5d6a7;
+        cursor: not-allowed;
+      }
+    }
+
+    &[color="warn"] {
+      background-color: #f44336; // Red for reject
+      &:hover:not([disabled]) {
+        background-color: #da190b;
+        transform: scale(1.1);
+      }
+      &:disabled {
+        background-color: #ef9a9a;
+        cursor: not-allowed;
+      }
+    }
   }
-  
-  .products-table {
-    width: 100%;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+}
+
+.no-products {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+  font-size: 1.1rem;
+}

@@ -1,31 +1,40 @@
 <!-- src/app/admin/admin-vendors/admin-vendors.component.html -->
 <div class="vendors-container">
-    <h2><mat-icon>group</mat-icon> Vendor Management</h2>
-    <mat-table [dataSource]="dataSource" class="vendors-table">
-      <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
-        <mat-cell *matCellDef="let vendor">{{ vendor.id }}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-        <mat-cell *matCellDef="let vendor">{{ vendor.name }}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="status">
-        <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
-        <mat-cell *matCellDef="let vendor">{{ vendor.status }}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-        <mat-cell *matCellDef="let vendor">
-          <button mat-icon-button color="primary" (click)="approveVendor(vendor.id)" *ngIf="vendor.status === 'pending'">
-            <mat-icon>check</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="rejectVendor(vendor.id)" *ngIf="vendor.status === 'pending'">
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-cell>
-      </ng-container>
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-    </mat-table>
+  <h2><mat-icon>group</mat-icon> Vendor Management</h2>
+  <mat-table [dataSource]="dataSource" class="vendors-table">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+      <mat-cell *matCellDef="let vendor">{{ vendor.id }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let vendor">{{ vendor.name }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+      <mat-cell *matCellDef="let vendor">{{ vendor.status }}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+      <mat-cell *matCellDef="let vendor">
+        <button mat-icon-button color="primary" (click)="approveVendor(vendor.id)" 
+                [disabled]="vendor.status !== 'pending'" 
+                matTooltip="Approve this vendor" 
+                aria-label="Approve">
+          <mat-icon>check</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="rejectVendor(vendor.id)" 
+                [disabled]="vendor.status !== 'pending'" 
+                matTooltip="Reject this vendor" 
+                aria-label="Reject">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+  <div class="no-vendors" *ngIf="dataSource.data.length === 0">
+    No vendors found.
   </div>
+</div>

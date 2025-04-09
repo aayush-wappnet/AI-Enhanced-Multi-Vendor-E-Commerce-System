@@ -30,6 +30,24 @@ export class VendorsController {
     return this.vendorsService.findById(id);
   }
 
+  @Get('pending/count')
+  @Roles('admin')
+  async getPendingCount() {
+    return this.vendorsService.getPendingCount();
+  }
+
+  @Get('approved/count')
+  @Roles('admin')
+  async getApprovedCount() {
+    return this.vendorsService.getApprovedCount();
+  }
+
+  @Get('rejected/count')
+  @Roles('admin')
+  async getRejectedCount() {
+    return this.vendorsService.getRejectedCount();
+  }
+
   @Post()
   @Roles('vendor')
   @UsePipes(new ValidationPipe())

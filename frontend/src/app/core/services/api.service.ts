@@ -2,14 +2,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap, switchMap } from 'rxjs/operators';
+import { tap, switchMap, map } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  apiUrl = 'http://localhost:5000/api';
+  apiUrl = `${environment.apiUrl}`;
   private cartCountSubject = new BehaviorSubject<number>(0);
   public cartCount$ = this.cartCountSubject.asObservable();
 
@@ -102,6 +103,18 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/vendors`, { headers: this.getHeaders() });
   }
 
+  getPendingVendorsCount(): Observable<number> {
+    return this.get<number>(`${this.apiUrl}/vendors/pending/count`);
+  }
+
+  getApprovedVendorsCount(): Observable<number> {
+    return this.get<number>(`${this.apiUrl}/vendors/approved/count`);
+  }
+
+  getRejectedVendorsCount(): Observable<number> {
+    return this.get<number>(`${this.apiUrl}/vendors/rejected/count`);
+  }
+
   approveVendor(id: number): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/vendors/${id}/approve`, {}, { headers: this.getHeaders() });
   }
@@ -111,7 +124,15 @@ export class ApiService {
   }
 
   getAllProducts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/products`, { headers: this.getHeaders() });
+    return this.http.get<any[]>(`${this.apiUrl}/products/all`, { headers: this.getHeaders() });
+  }
+
+  getApprovedProducts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/products/approved`, { headers: this.getHeaders() });
+  }
+
+  getRejectedProducts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/products/rejected`, { headers: this.getHeaders() });
   }
 
   approveProduct(id: number): Observable<any> {
@@ -131,8 +152,4 @@ export class ApiService {
   getOrderById(id: number): Observable<any> {
     return this.get<any>(`${this.apiUrl}/orders/${id}`);
   }
-
-
-
-
 }

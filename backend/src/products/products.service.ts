@@ -24,6 +24,14 @@ export class ProductsService {
     return this.productRepository.findAllPublic();
   }
 
+  async findApproved(): Promise<Product[]> {
+    return this.productRepository.findByStatus('approved');
+  }
+
+  async findRejected(): Promise<Product[]> {
+    return this.productRepository.findByStatus('rejected');
+  }
+
   async findById(id: number): Promise<Product | null> {
     return this.productRepository.findById(id);
   }

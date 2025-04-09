@@ -1,33 +1,68 @@
-// src/app/admin/admin-dashboard/admin-dashboard.component.scss
 .dashboard-container {
-    padding: 20px;
+  padding: 20px;
+  min-height: calc(90.2vh - 120px);
+}
+
+.dashboard-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); // Uniform width
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 20px;
+  background: #e0f7fa; // Light cyan background to match screenshot
+  border-radius: 8px;
+  height: 150px; // Fixed height for uniformity
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
   }
-  
-  .dashboard-card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 2rem;
+    color: #1976d2;
+    margin: 0;
   }
-  
-  .stats {
+
+  mat-icon {
+    font-size: 1.4rem;
+    color: #1976d2;
+    margin-left: 5px;
+    padding-right: 5px;
+  }
+
+  mat-card-header {
+    margin-bottom: 10px;
+  }
+
+  mat-card-content {
+    flex-grow: 1;
     display: flex;
-    gap: 20px;
+    align-items: center;
+    justify-content: center;
   }
-  
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr; // Stack cards vertically on small screens
+  }
+
   .stat-card {
-    flex: 1;
-    text-align: center;
-    padding: 20px;
-    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
-    border-radius: 8px;
-  
-    h2 {
-      font-size: 2rem;
-      color: #1976d2;
-    }
-  
-    mat-icon {
-      font-size: 2.5rem;
-      color: #1976d2;
-    }
+    height: auto; // Allow natural height on mobile
+    min-height: 150px; // Minimum height to maintain consistency
   }
+}

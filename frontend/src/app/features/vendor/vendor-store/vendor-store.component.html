@@ -1,113 +1,182 @@
-<mat-card class="store-card">
-  <mat-card-header>
-    <mat-card-title>{{ vendorStore ? 'Edit Store' : 'Add New Store' }}</mat-card-title>
-    <mat-card-subtitle>Manage your store information</mat-card-subtitle>
-  </mat-card-header>
+<mat-tab-group class="store-tabs" mat-align-tabs="start">
+  <!-- Add New Store Tab -->
+  <mat-tab label="Add New Store">
+    <mat-card class="store-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>store</mat-icon>
+          Add New Store
+        </mat-card-title>
+        <mat-card-subtitle>Create a new vendor store</mat-card-subtitle>
+      </mat-card-header>
 
-  <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-  <mat-card-content>
-    <form [formGroup]="storeForm" (ngSubmit)="onSubmit()" class="store-form">
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Store Name *</mat-label>
-          <input matInput formControlName="name" required>
-          <mat-error *ngIf="storeForm.get('name')?.invalid">Store name is required</mat-error>
-        </mat-form-field>
-      </div>
+      <mat-card-content>
+        <form [formGroup]="storeForm" (ngSubmit)="onSubmit()" class="store-form">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Store Name</mat-label>
+              <mat-icon matPrefix>storefront</mat-icon>
+              <input matInput formControlName="name" required>
+              <mat-error *ngIf="storeForm.get('name')?.invalid">Store name is required</mat-error>
+            </mat-form-field>
+          </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Category *</mat-label>
-          <mat-select formControlName="categoryId" required>
-            <mat-option *ngFor="let category of categories" [value]="category.id">
-              {{ category.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="storeForm.get('categoryId')?.invalid">Category is required</mat-error>
-        </mat-form-field>
-      </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Category</mat-label>
+              <mat-icon matPrefix>category</mat-icon>
+              <mat-select formControlName="categoryId" required>
+                <mat-option *ngFor="let category of categories" [value]="category.id">
+                  {{ category.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="storeForm.get('categoryId')?.invalid">Category is required</mat-error>
+            </mat-form-field>
+          </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
-        </mat-form-field>
-      </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <mat-icon matPrefix>description</mat-icon>
+              <textarea matInput formControlName="description" rows="3"></textarea>
+            </mat-form-field>
+          </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Address</mat-label>
-          <input matInput formControlName="address">
-        </mat-form-field>
-      </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Address</mat-label>
+              <mat-icon matPrefix>location_on</mat-icon>
+              <input matInput formControlName="address">
+            </mat-form-field>
+          </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Business Email</mat-label>
-          <input matInput formControlName="businessEmail" type="email">
-          <mat-error *ngIf="storeForm.get('businessEmail')?.invalid">Please enter a valid email</mat-error>
-        </mat-form-field>
-      </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Business Email</mat-label>
+              <mat-icon matPrefix>email</mat-icon>
+              <input matInput formControlName="businessEmail" type="email">
+              <mat-error *ngIf="storeForm.get('businessEmail')?.invalid">Please enter a valid email</mat-error>
+            </mat-form-field>
+          </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Business Contact</mat-label>
-          <input matInput formControlName="businessContact" placeholder="+1234567890">
-        </mat-form-field>
-      </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Business Contact</mat-label>
+              <mat-icon matPrefix>phone</mat-icon>
+              <input matInput formControlName="businessContact">
+            </mat-form-field>
+          </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Logo URL</mat-label>
-          <input matInput formControlName="logoUrl" placeholder="https://example.com/logo.png">
-        </mat-form-field>
-      </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Logo URL</mat-label>
+              <mat-icon matPrefix>image</mat-icon>
+              <input matInput formControlName="logoUrl">
+            </mat-form-field>
+          </div>
 
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Website</mat-label>
-          <input matInput formControlName="website" placeholder="https://example.com">
-        </mat-form-field>
-      </div>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Website</mat-label>
+              <mat-icon matPrefix>language</mat-icon>
+              <input matInput formControlName="website">
+            </mat-form-field>
+          </div>
 
-      <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="!storeForm.valid">
-          {{ vendorStore ? 'Update Store' : 'Create Store' }}
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!storeForm.valid">
+              <mat-icon>add</mat-icon>
+              Create Store
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
 
-  <mat-divider *ngIf="vendorStore"></mat-divider>
+      <mat-spinner *ngIf="isLoading" diameter="50" class="loading-spinner"></mat-spinner>
+    </mat-card>
+  </mat-tab>
 
-  <mat-card-content *ngIf="vendorStore" class="store-details">
-    <h3>Your Store Details</h3>
-    <div class="detail-item">
-      <strong>Name:</strong> {{ vendorStore.name }}
+  <!-- All Stores Tab -->
+  <mat-tab label="My Stores">
+    <div class="stores-container">
+      <mat-card class="stores-list-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>store</mat-icon>
+            Your Stores
+          </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+          <mat-list *ngIf="vendorStores.length > 0; else noStores">
+            <mat-list-item *ngFor="let store of vendorStores" (click)="selectStore(store)" class="store-item">
+              <mat-icon matListItemIcon>storefront</mat-icon>
+              <span matListItemTitle>{{ store.name }}</span>
+              <span matListItemLine>{{ getCategoryName(store.categoryId) }}</span>
+            </mat-list-item>
+          </mat-list>
+          <ng-template #noStores>
+            <p>No stores found. Create one in the "Add New Store" tab!</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card *ngIf="selectedStore" class="store-details-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            {{ selectedStore.name }}
+          </mat-card-title>
+          <mat-card-subtitle>Store Details</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="store-details">
+          <div class="detail-item">
+            <mat-icon>category</mat-icon>
+            <strong>Category:</strong> {{ getCategoryName(selectedStore.categoryId) }}
+          </div>
+          <div class="detail-item">
+            <mat-icon>description</mat-icon>
+            <strong>Description:</strong> {{ selectedStore.description || 'Not provided' }}
+          </div>
+          <div class="detail-item">
+            <mat-icon>location_on</mat-icon>
+            <strong>Address:</strong> {{ selectedStore.address || 'Not provided' }}
+          </div>
+          <div class="detail-item">
+            <mat-icon>email</mat-icon>
+            <strong>Business Email:</strong> {{ selectedStore.businessEmail || 'Not provided' }}
+          </div>
+          <div class="detail-item">
+            <mat-icon>phone</mat-icon>
+            <strong>Contact:</strong> {{ selectedStore.businessContact || 'Not provided' }}
+          </div>
+          <div class="detail-item" *ngIf="selectedStore.logoUrl">
+            <mat-icon>image</mat-icon>
+            <strong>Logo:</strong> <img [src]="selectedStore.logoUrl" alt="Store Logo" class="store-logo">
+          </div>
+          <div class="detail-item">
+            <mat-icon>language</mat-icon>
+            <strong>Website:</strong>
+            <a *ngIf="selectedStore.website" [href]="selectedStore.website" target="_blank">{{ selectedStore.website }}</a>
+            <span *ngIf="!selectedStore.website">Not provided</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="editStore(selectedStore)">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+          <button mat-raised-button color="warn" (click)="deleteStore(selectedStore.id)">
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+        </mat-card-actions>
+      </mat-card>
     </div>
-    <div class="detail-item">
-      <strong>Category:</strong> {{ getCategoryName(vendorStore.categoryId) }}
-    </div>
-    <div class="detail-item">
-      <strong>Description:</strong> {{ vendorStore.description || 'Not provided' }}
-    </div>
-    <div class="detail-item">
-      <strong>Address:</strong> {{ vendorStore.address || 'Not provided' }}
-    </div>
-    <div class="detail-item">
-      <strong>Business Email:</strong> {{ vendorStore.businessEmail || 'Not provided' }}
-    </div>
-    <div class="detail-item">
-      <strong>Contact:</strong> {{ vendorStore.businessContact || 'Not provided' }}
-    </div>
-    <div class="detail-item" *ngIf="vendorStore.logoUrl">
-      <strong>Logo:</strong> <img [src]="vendorStore.logoUrl" alt="Store Logo" class="store-logo">
-    </div>
-    <div class="detail-item">
-      <strong>Website:</strong> 
-      <a *ngIf="vendorStore.website" [href]="vendorStore.website" target="_blank">{{ vendorStore.website }}</a>
-      <span *ngIf="!vendorStore.website">Not provided</span>
-    </div>
-  </mat-card-content>
-</mat-card>
+  </mat-tab>
+</mat-tab-group>
+
+<mat-spinner *ngIf="isLoading && !selectedStore" diameter="50" class="loading-spinner"></mat-spinner>

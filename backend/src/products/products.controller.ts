@@ -20,6 +20,24 @@ export class ProductsController {
     return this.productsService.findAllPublic();
   }
 
+  @Get('all')
+  @Roles('admin')
+  async findAllProducts() {
+    return this.productsService.findAll();
+  }
+
+  @Get('approved')
+  @Roles('admin')
+  async findApprovedProducts() {
+    return this.productsService.findApproved();
+  }
+
+  @Get('rejected')
+  @Roles('admin')
+  async findRejectedProducts() {
+    return this.productsService.findRejected();
+  }
+
   @Get('categories')
   @Public()
   async findAllCategories() {

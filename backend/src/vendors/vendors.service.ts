@@ -29,6 +29,18 @@ export class VendorsService {
     return this.vendorRepository.findByUserId(userId);
   }
 
+  async getPendingCount(): Promise<number> {
+    return this.vendorRepository.countByStatus('pending');
+  }
+
+  async getApprovedCount(): Promise<number> {
+    return this.vendorRepository.countByStatus('approved');
+  }
+
+  async getRejectedCount(): Promise<number> {
+    return this.vendorRepository.countByStatus('rejected');
+  }
+
   async create(createVendorDto: CreateVendorDto): Promise<Vendor> {
     const user = await this.usersService.findById(createVendorDto.userId);
     if (!user) {

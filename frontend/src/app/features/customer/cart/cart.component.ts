@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Observable, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { loadStripe } from '@stripe/stripe-js';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -32,7 +33,7 @@ export class CartComponent implements OnInit {
   async ngOnInit() {
     this.loadCart();
     try {
-      this.stripe = await loadStripe('pk_test_51QwgmpSC0yoSUpha40niA9BO3Q6XnB6CSUDaaifwURXXszTKvfTBEu1SLsD2D1mdaJt5z72nX7tSpOBN5XAddPWh00mAOwPdsb'); // Replace with your Stripe test publishable key
+      this.stripe = await loadStripe(`${environment.stripePublicKey}`); // Replace with your Stripe test publishable key
       if (!this.stripe) {
         console.error('Failed to load Stripe.js');
         this.paymentError = 'Failed to initialize payment system';
