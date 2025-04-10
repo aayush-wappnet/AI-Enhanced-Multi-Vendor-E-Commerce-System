@@ -12,6 +12,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { CartModule } from './cart/cart.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { ConfigModule } from '@nestjs/config';
+import { ChatbotModule } from './chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     PaymentsModule,
     CartModule,
     WishlistModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [AppService],

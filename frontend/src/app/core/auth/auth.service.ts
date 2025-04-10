@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../environments/environment';
 
 interface User {
   id: string;
@@ -24,7 +25,7 @@ interface DecodedToken {
 export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
-  private apiUrl = 'http://localhost:5000/api';
+  private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) {
     const storedToken = localStorage.getItem('authToken');

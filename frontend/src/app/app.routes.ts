@@ -10,13 +10,23 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-
 import { AdminVendorsComponent } from './features/admin/admin-vendors/admin-vendors.component';
 import { AdminProductsComponent } from './features/admin/admin-products/admin-products.component';  
 import { ManageOrdersComponent } from './features/admin/manage-orders/manage-orders.component';
+import { HomeComponent } from './features/home/home.component';
+
 
 export const appRoutes: Routes = [
+
+    {
+    path: 'home',
+    component: HomeComponent // Temporary placeholder until we create a HomeComponent
+  }
+
+  ,
   {
     path: '',
     redirectTo: '/auth/login',
     pathMatch: 'full'
   },
+
 
   {
     path: '',
@@ -35,6 +45,7 @@ export const appRoutes: Routes = [
   }
 
 ,
+
   {
     path: 'admin',
     children: [
@@ -46,9 +57,6 @@ export const appRoutes: Routes = [
   }
 
 
-  // {
-  //   path: 'home',
-  //   component: HeaderComponent // Temporary placeholder until we create a HomeComponent
-  // }
+
   // Add more routes as we create components
 ];

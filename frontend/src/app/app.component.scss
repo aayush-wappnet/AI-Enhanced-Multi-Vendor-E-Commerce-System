@@ -1,28 +1,44 @@
 .app-container {
-    display: flex;
-    flex-direction: column;
-    // min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+}
 
-  }
-  
-  router-outlet {
-    flex: 1 0 auto;
-    margin-top: auto;
-  }
-  
+router-outlet {
+  flex: 1 0 auto;
+  margin-top: auto;
+}
+
 app-footer {
-    flex-shrink: 0;
-    // background-color: #6a0dad;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-    width: 100%;
-    position: relative;
-    bottom: 0;
-    margin-bottom: 0;
-  
-    p {
-      margin: 0;
-      font-size: 0.9rem;
-    }
+  flex-shrink: 0;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+  margin-bottom: 0;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
   }
+}
+
+// Chat Toggle Styles
+.chat-toggle {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  background-color: rgb(232, 195, 195);
+
+  &.open {
+    transform: rotate(45deg);
+  }
+
+  mat-icon {
+    font-size: 24px;
+  }
+}

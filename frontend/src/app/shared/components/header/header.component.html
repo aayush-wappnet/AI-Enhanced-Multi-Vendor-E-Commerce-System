@@ -1,8 +1,13 @@
-<!-- src/app/shared/components/header/header.component.html -->
 <mat-toolbar class="header">
-  <span class="brand">ShoppingMart</span>
+  <div class="brand-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="ShoppingMart Logo" class="logo">
+    <span class="brand"><span class="shopping">Shopping</span><span class="mart">Mart</span></span>
+  </div>
   <span class="spacer"></span>
   <div *ngIf="!(user$ | async)" class="nav-links">
+    <button mat-button routerLink="/home" color="default">
+      <mat-icon>home</mat-icon> Home
+    </button>
     <button mat-button routerLink="/auth/login" color="default">
       <mat-icon>login</mat-icon> Login
     </button>
@@ -11,6 +16,9 @@
     </button>
   </div>
   <div *ngIf="(user$ | async) as user" class="nav-links">
+    <button mat-button routerLink="/home" color="default">
+      <mat-icon>home</mat-icon> Home
+    </button>
     <ng-container *ngIf="user.role === 'customer' || !user.role">
       <button mat-button routerLink="/products" class="customer-nav">
         <mat-icon>storefront</mat-icon> Products

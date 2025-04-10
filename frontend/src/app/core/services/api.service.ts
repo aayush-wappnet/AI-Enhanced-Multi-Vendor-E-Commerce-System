@@ -1,4 +1,3 @@
-// src/app/core/services/api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -187,5 +186,10 @@ export class ApiService {
 
   getOrderById(id: number): Observable<any> {
     return this.get<any>(`${this.apiUrl}/orders/${id}`);
+  }
+
+  // New method for chatbot response
+  getChatbotResponse(message: string): Observable<{ response: string }> {
+    return this.post<{ response: string }>(`${this.apiUrl}/chatbot`, { message });
   }
 }

@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
     private apiService: ApiService
   ) {
     this.user$ = this.authService.user$.pipe(
-      tap(user => console.log('User from AuthService (with token):', user, 'Token:', authService.getToken()))
+      // tap(user => console.log('User from AuthService (with token):', user, 'Token:', authService.getToken()))
     );
   }
 

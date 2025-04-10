@@ -1,1 +1,43 @@
-<p>home works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-text">
+        <h1 class="hero-title">Welcome to Your Ultimate Shopping Destination</h1>
+        <p class="hero-subtitle">Discover a world of products with AI-powered recommendations tailored just for you.</p>
+        <button mat-raised-button class="cta-button" (click)="navigateToProducts()">Shop Now</button>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1664455340023-214c33a9d0bd?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Hero Image">
+      </div>
+    </div>
+  </section>
+  
+  <!-- Welcome Message -->
+  <section class="welcome-section">
+    <h2>Why Shop With Us?</h2>
+    <p>Experience seamless shopping with dynamic pricing, trusted vendors, and smart support powered by AI.</p>
+  </section>
+  
+  <!-- Product Categories Section -->
+  <section class="categories-section" #categoriesSection>
+    <h2>Explore Our Categories</h2>
+    <div class="categories-grid">
+      <mat-card class="category-card" *ngFor="let category of categories" (click)="navigateToCategory(category.name)">
+        <mat-card-content>
+          <mat-icon class="category-icon">{{ category.icon }}</mat-icon>
+          <h3>{{ category.name }}</h3>
+          <p>Discover top-quality {{ category.name.toLowerCase() }} products from trusted vendors.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary">Browse {{ category.name }}</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+  
+  <!-- Additional Section: Featured Vendors or Deals -->
+  <section class="featured-section">
+    <h2>Featured Deals</h2>
+    <p>Check out the latest offers and exclusive products from our top vendors!</p>
+    <button mat-stroked-button color="primary">View All Deals</button>
+  </section>

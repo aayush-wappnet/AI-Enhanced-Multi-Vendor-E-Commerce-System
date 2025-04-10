@@ -1,0 +1,27 @@
+<div class="chatbot-container">
+    <mat-card class="chat-card">
+      <mat-card-header>
+        <mat-card-title>Chat with Support</mat-card-title>
+        <button mat-icon-button (click)="onClose()" class="close-button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content class="chat-content">
+        <div *ngIf="messages.length === 0">No messages yet. Send a message to start!</div>
+        <div class="messages" *ngFor="let msg of messages">
+          <div [class.bot]="msg.role === 'bot'" [class.user]="msg.role === 'user'">
+            {{ msg.content }}
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Type your message..." [(ngModel)]="message" (keyup.enter)="sendMessage()" [disabled]="isLoading" />
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="isLoading || !message.trim()">
+          <span *ngIf="!isLoading">Send</span>
+          <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="20"></mat-progress-spinner>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>

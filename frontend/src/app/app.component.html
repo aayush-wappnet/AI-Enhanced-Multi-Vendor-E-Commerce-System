@@ -1,6 +1,20 @@
-<!-- src/app/app.component.html -->
 <app-header></app-header>
 <div class="app-container">
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>
 <app-footer></app-footer>
+
+<!-- Chat Icon -->
+<button
+  mat-fab
+  color="primary"
+  class="chat-toggle"
+  (click)="toggleChat()"
+  [class.open]="isChatOpen"
+  aria-label="Toggle Chatbot"
+>
+  <mat-icon>chat</mat-icon>
+</button>
+
+<!-- Chatbot Component (conditionally shown) -->
+<app-chatbot *ngIf="isChatOpen" (closeChat)="toggleChat()"></app-chatbot>
