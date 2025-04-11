@@ -192,4 +192,10 @@ export class ApiService {
   getChatbotResponse(message: string): Observable<{ response: string }> {
     return this.post<{ response: string }>(`${this.apiUrl}/chatbot`, { message });
   }
+
+
+  getRecommendations(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/products/${id}/recommendations`, { headers: this.getHeaders() });
+  }
+
 }

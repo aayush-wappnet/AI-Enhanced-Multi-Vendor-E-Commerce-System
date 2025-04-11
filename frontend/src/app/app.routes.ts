@@ -23,7 +23,7 @@ export const appRoutes: Routes = [
   ,
   {
     path: '',
-    redirectTo: '/auth/login',
+    redirectTo: '/home',
     pathMatch: 'full'
   },
 

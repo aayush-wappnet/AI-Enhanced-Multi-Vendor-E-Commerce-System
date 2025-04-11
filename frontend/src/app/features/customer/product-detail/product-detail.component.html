@@ -1,4 +1,5 @@
 <div class="product-detail-container">
+  <!-- Product Details Section -->
   <div class="product-detail-layout" *ngIf="product$ | async as product">
     <div class="product-image-container">
       <img [src]="product.imageUrls[0]" alt="{{ product.name }}" class="product-image">
@@ -40,6 +41,20 @@
           <button mat-icon-button color="accent" (click)="addToWishlist(product.id)" class="wishlist-button">
             <mat-icon>favorite_border</mat-icon>
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- You May Also Like Section (Moved Below) -->
+  <div class="recommendations-container" *ngIf="recommendations$ | async as recommendations">
+    <h2 class="recommendations-title">You May Also Like</h2>
+    <div class="recommendations-list">
+      <div class="recommendation-card" *ngFor="let rec of recommendations" (click)="onRecommendationClick(rec.id)">
+        <img [src]="rec.imageUrls[0]" alt="{{ rec.name }}" class="recommendation-image">
+        <div class="recommendation-info">
+          <h3 class="recommendation-name">{{ rec.name }}</h3>
+          <p class="recommendation-price">{{ rec.price | currency:'INR' }}</p>
         </div>
       </div>
     </div>

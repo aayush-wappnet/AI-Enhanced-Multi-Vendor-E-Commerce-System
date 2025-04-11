@@ -1,4 +1,3 @@
-// product.repository.ts
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -62,6 +61,23 @@ export class ProductRepository {
       query.where.subcategory = { id: subcategoryId };
     }
     return this.productRepository.find(query);
+  }
+
+  async findRecommendations(id: number): Promise<Product[]> {
+    const product = await this.findById(id);
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.vendor', 'vendor')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.subcategory', 'subcategory')
+      .where('product.categoryId = :categoryId', { categoryId: product.category.id })
+      .andWhere('product.id != :id', { id: id })
+      .andWhere('product.status = :status', { status: 'approved' })
+      .take(5) // Limit to 5 recommendations
+      .getMany();
   }
 
   async create(

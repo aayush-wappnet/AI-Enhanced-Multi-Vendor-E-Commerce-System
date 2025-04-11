@@ -1,4 +1,3 @@
-// products.controller.ts
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UsePipes, ValidationPipe, UseGuards, UseInterceptors, UploadedFiles, BadRequestException } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -56,6 +55,13 @@ export class ProductsController {
     @Query('subcategoryId') subcategoryId?: number,
   ) {
     return this.productsService.findApprovedByCategoryAndSubcategory(categoryId, subcategoryId);
+  }
+
+  @Get(':id/recommendations')
+  @Roles('admin', 'vendor', 'customer')
+  // @Public() // Allow public access if needed, adjust based on your security requirements
+  async getRecommendations(@Param('id') id: number) {
+    return this.productsService.getRecommendations(id);
   }
 
   @Post()

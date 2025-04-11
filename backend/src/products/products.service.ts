@@ -1,4 +1,3 @@
-// products.service.ts
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ProductRepository } from './product.repository';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -50,6 +49,14 @@ export class ProductsService {
 
   async findApprovedByCategoryAndSubcategory(categoryId: number, subcategoryId?: number): Promise<Product[]> {
     return this.productRepository.findApprovedByCategoryAndSubcategory(categoryId, subcategoryId);
+  }
+
+  async getRecommendations(id: number): Promise<Product[]> {
+    const product = await this.productRepository.findById(id);
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return this.productRepository.findRecommendations(id);
   }
 
   async uploadImages(files: Express.Multer.File[]): Promise<string[]> {
