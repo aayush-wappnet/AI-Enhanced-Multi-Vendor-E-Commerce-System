@@ -142,4 +142,19 @@ export class ProductsService {
   async delete(id: number): Promise<void> {
     return this.productRepository.delete(id);
   }
+
+
+
+
+  async findByVendorId(vendorId: number): Promise<Product[]> {
+    // Optional: Validate vendor existence
+    const vendor = await this.vendorsService.findById(vendorId);
+    if (!vendor) {
+      throw new NotFoundException(`Vendor with ID ${vendorId} not found`);
+    }
+    
+    return this.productRepository.findByVendorId(vendorId);
+  }
+
+
 }

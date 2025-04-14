@@ -40,7 +40,7 @@ export class LoginComponent {
         next: () => {
           // Trigger cart count update after login
           this.apiService.getCart().subscribe(); // This will update cartCount$ in ApiService
-          this.router.navigate(['/products']); // Redirect to products page
+          this.router.navigate(['/home']); // Redirect to products page
         },
         error: (err) => {
           console.error('Login failed:', err);

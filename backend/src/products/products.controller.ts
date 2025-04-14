@@ -49,6 +49,12 @@ export class ProductsController {
     return this.productsService.findById(id);
   }
 
+  @Get('vendor/:vendorId')
+  @Roles('admin', 'vendor')
+  async findByVendorId(@Param('vendorId') vendorId: number) {
+    return this.productsService.findByVendorId(vendorId);
+  }
+
   @Get('category/:categoryId')
   async findApprovedByCategoryAndSubcategory(
     @Param('categoryId') categoryId: number,
@@ -59,7 +65,6 @@ export class ProductsController {
 
   @Get(':id/recommendations')
   @Roles('admin', 'vendor', 'customer')
-  // @Public() // Allow public access if needed, adjust based on your security requirements
   async getRecommendations(@Param('id') id: number) {
     return this.productsService.getRecommendations(id);
   }

@@ -198,4 +198,21 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/products/${id}/recommendations`, { headers: this.getHeaders() });
   }
 
+
+  getProductsByVendorId(vendorId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/products/vendor/${vendorId}`, { headers: this.getHeaders() });
+  }
+
+  // New method to update a product
+  updateProduct(id: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/products/${id}`, data, { headers: this.getHeaders() });
+  }
+
+  // New method to delete a product
+  deleteProduct(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/products/${id}`, { headers: this.getHeaders() });
+  }
+
+
+
 }

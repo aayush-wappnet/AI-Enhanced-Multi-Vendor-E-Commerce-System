@@ -164,14 +164,43 @@
             <span *ngIf="!selectedStore.website">Not provided</span>
           </div>
         </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-content class="products-section">
+          <h3>
+            <mat-icon>inventory</mat-icon>
+            Products
+          </h3>
+          <div class="product-actions" *ngIf="products.length > 0">
+            <button mat-raised-button color="primary" (click)="editProduct(selectedProduct)" [disabled]="!selectedProduct">
+              <mat-icon>edit</mat-icon>
+              Edit Product
+            </button>
+            <button mat-raised-button color="warn" (click)="deleteProduct(selectedProduct?.id)" [disabled]="!selectedProduct">
+              <mat-icon>delete</mat-icon>
+              Delete Product
+            </button>
+          </div>
+          <mat-list *ngIf="products.length > 0; else noProducts">
+            <mat-list-item *ngFor="let product of products" (click)="selectedProduct = product" class="product-item" [class.selected]="selectedProduct?.id === product.id">
+              <img matListItemAvatar [src]="product.imageUrls[0] || 'assets/placeholder.png'" alt="{{ product.name }}">
+              <span matListItemTitle>{{ product.name }}</span>
+              <span matListItemLine>Price: ${{ product.price }} | Stock: {{ product.stock }}</span>
+              <span matListItemLine>Category: {{ getCategoryName(product.category?.id) }}</span>
+              <span matListItemLine>Status: {{ product.status }}</span>
+            </mat-list-item>
+          </mat-list>
+          <ng-template #noProducts>
+            <p>No products found for this store.</p>
+          </ng-template>
+        </mat-card-content>
         <mat-card-actions>
           <button mat-raised-button color="primary" (click)="editStore(selectedStore)">
             <mat-icon>edit</mat-icon>
-            Edit
+            Edit Store
           </button>
           <button mat-raised-button color="warn" (click)="deleteStore(selectedStore.id)">
             <mat-icon>delete</mat-icon>
-            Delete
+            Delete Store
           </button>
         </mat-card-actions>
       </mat-card>

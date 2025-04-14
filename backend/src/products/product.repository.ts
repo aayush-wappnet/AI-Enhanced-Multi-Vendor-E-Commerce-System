@@ -123,4 +123,13 @@ export class ProductRepository {
   async delete(id: number): Promise<void> {
     await this.productRepository.delete(id);
   }
+
+
+  async findByVendorId(vendorId: number): Promise<Product[]> {
+    return this.productRepository.find({
+      where: { vendor: { id: vendorId } },
+      relations: ['vendor', 'category', 'subcategory'],
+    });
+  }
+
 }

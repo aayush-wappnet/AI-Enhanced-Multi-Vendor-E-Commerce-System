@@ -4,7 +4,6 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { authRoutes } from './features/auth/auth.routes';
 import { customerRoutes } from './features/customer/customer.routes';
 import { VendorStoreComponent } from './features/vendor/vendor-store/vendor-store.component';
-import { VendorDashboardComponent } from './features/vendor/dashboard/vendor-dashboard.component';
 import { AddProductComponent } from './features/vendor/add-product/add-product.component';
 import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { AdminVendorsComponent } from './features/admin/admin-vendors/admin-vendors.component';
@@ -37,8 +36,7 @@ export const appRoutes: Routes = [
         path: 'vendor',
         children: [
           { path: 'store', component: VendorStoreComponent },
-          { path: 'add-product', component: AddProductComponent },
-          { path: 'dashboard', component: VendorDashboardComponent }
+          { path: 'add-product', component: AddProductComponent }
         ]
       }
     ]

@@ -44,6 +44,8 @@ export class VendorStoreComponent implements OnInit {
   vendorStores: any[] = [];
   selectedStore: any = null;
   categories: any[] = [];
+  products: any[] = [];
+  selectedProduct: any = null;
   isLoading = false;
 
   constructor(
@@ -62,7 +64,7 @@ export class VendorStoreComponent implements OnInit {
       businessContact: [''],
       logoUrl: [''],
       website: [''],
-      categoryId: ['', Validators.required] // Kept for add form, but not used in edit
+      categoryId: ['', Validators.required]
     });
   }
 
@@ -97,9 +99,16 @@ export class VendorStoreComponent implements OnInit {
       this.apiService.get<any[]>(`${this.apiService.apiUrl}/vendors/user/${user.id}`).subscribe({
         next: (stores) => {
           this.vendorStores = stores;
+          if (this.selectedStore) {
+            const store = stores.find(s => s.id === this.selectedStore.id);
+            if (store) {
+              this.selectStore(store);
+            }
+          }
           this.isLoading = false;
         },
         error: (err) => {
+          console.error('Error fetching vendor stores:', err);
           this.showError('Error loading stores');
           this.isLoading = false;
         }
@@ -109,8 +118,27 @@ export class VendorStoreComponent implements OnInit {
     }
   }
 
+  loadProducts(vendorId: number) {
+    this.isLoading = true;
+    this.apiService.getProductsByVendorId(vendorId).subscribe({
+      next: (products) => {
+        console.log('Products fetched:', products); // Debug log
+        this.products = products || [];
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching products:', err); // Debug log
+        this.showError('Error loading products');
+        this.products = [];
+        this.isLoading = false;
+      }
+    });
+  }
+
   selectStore(store: any) {
     this.selectedStore = store;
+    this.selectedProduct = null; // Reset selected product
+    this.loadProducts(store.id);
   }
 
   onSubmit() {
@@ -140,21 +168,11 @@ export class VendorStoreComponent implements OnInit {
   }
 
   editStore(store: any) {
-    this.storeForm.patchValue({
-      name: store.name,
-      description: store.description,
-      address: store.address,
-      businessEmail: store.businessEmail,
-      businessContact: store.businessContact,
-      logoUrl: store.logoUrl,
-      website: store.website
-    });
-
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Edit Store',
         message: 'Update store details below and confirm to save changes.',
-        showForm: true,
+        isStoreForm: true,
         formData: {
           name: store.name,
           description: store.description,
@@ -162,23 +180,20 @@ export class VendorStoreComponent implements OnInit {
           businessEmail: store.businessEmail,
           businessContact: store.businessContact,
           logoUrl: store.logoUrl,
-          website: store.website
-        }
+          website: store.website,
+          categoryId: store.categoryId
+        },
+        categories: this.categories
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.isLoading = true;
-        const updatedData = {
-          ...result,
-          categoryId: store.categoryId // Preserve the original categoryId
-        };
-        this.apiService.updateVendorStore(store.id, updatedData).subscribe({
+        this.apiService.updateVendorStore(store.id, result).subscribe({
           next: () => {
             this.showSuccess('Store updated successfully');
             this.loadVendorStores();
-            this.selectedStore = null;
             this.isLoading = false;
           },
           error: (err) => {
@@ -206,10 +221,75 @@ export class VendorStoreComponent implements OnInit {
             this.showSuccess('Store deleted successfully');
             this.loadVendorStores();
             this.selectedStore = null;
+            this.products = [];
             this.isLoading = false;
           },
           error: (err) => {
             this.showError('Error deleting store');
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  editProduct(product: any) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Edit Product',
+        message: 'Update product details below and confirm to save changes.',
+        isProductForm: true,
+        formData: {
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          stock: product.stock,
+          type: product.type,
+          categoryId: product.category?.id,
+          subcategoryId: product.subcategory?.id
+        },
+        categories: this.categories
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.isLoading = true;
+        this.apiService.updateProduct(product.id, result).subscribe({
+          next: () => {
+            this.showSuccess('Product updated successfully');
+            this.loadProducts(this.selectedStore.id);
+            this.isLoading = false;
+          },
+          error: (err) => {
+            this.showError('Error updating product');
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  deleteProduct(productId: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Product',
+        message: 'Are you sure you want to delete this product? This action cannot be undone.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.isLoading = true;
+        this.apiService.deleteProduct(productId).subscribe({
+          next: () => {
+            this.showSuccess('Product deleted successfully');
+            this.loadProducts(this.selectedStore.id);
+            this.selectedProduct = null;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            this.showError('Error deleting product');
             this.isLoading = false;
           }
         });

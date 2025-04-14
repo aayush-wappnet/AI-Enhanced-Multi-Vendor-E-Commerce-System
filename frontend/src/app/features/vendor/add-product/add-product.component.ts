@@ -147,7 +147,7 @@ export class AddProductComponent implements OnInit {
           .subscribe({
             next: () => {
               this.isSubmitting = false;
-              this.router.navigate(['/vendor/dashboard']);
+              // this.router.navigate(['/vendor/dashboard']);
             },
             error: (err) => {
               console.error('Error adding product', err);
